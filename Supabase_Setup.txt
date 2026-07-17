@@ -1,0 +1,123 @@
+
+MAHALAK CONSULTANTS - SECURE CLOUD DATABASE SETUP
+-------------------------------------------------
+
+1. CREATE A SUPABASE PROJECT
+   - Go to supabase.com and create a free project named "Mahalak-Consultants".
+
+2. RUN SQL TABLES (CRITICAL STEP)
+   - Go to "SQL Editor" in your Supabase Dashboard.
+   - Click "New Query".
+   - Paste the following SQL script and click "RUN":
+
+--- START OF SQL SCRIPT ---
+
+-- 1. Products Table
+CREATE TABLE products (
+  id BIGINT PRIMARY KEY,
+  name TEXT NOT NULL,
+  category TEXT CHECK (category IN ('Vastu', 'Interior', 'Decor')),
+  price NUMERIC,
+  image TEXT,
+  description TEXT,
+  "inStock" BOOLEAN DEFAULT true
+);
+
+-- 2. Blogs Table
+CREATE TABLE blogs (
+  id BIGINT PRIMARY KEY,
+  title TEXT NOT NULL,
+  excerpt TEXT,
+  content TEXT,
+  date DATE,
+  image TEXT,
+  author TEXT,
+  "authorImage" TEXT,
+  "readingTime" TEXT
+);
+
+-- 3. Projects Table
+CREATE TABLE projects (
+  id BIGINT PRIMARY KEY,
+  title TEXT NOT NULL,
+  category TEXT,
+  image TEXT,
+  description TEXT
+);
+
+-- 4. Team Table
+CREATE TABLE team (
+  id BIGINT PRIMARY KEY,
+  name TEXT NOT NULL,
+  role TEXT,
+  image TEXT,
+  bio TEXT,
+  "order" INTEGER
+);
+
+-- 5. Media Table
+CREATE TABLE media (
+  id BIGINT PRIMARY KEY,
+  title TEXT NOT NULL,
+  type TEXT CHECK (type IN ('video', 'podcast')),
+  thumbnail TEXT,
+  link TEXT
+);
+
+-- 6. Testimonials Table
+CREATE TABLE testimonials (
+  id BIGINT PRIMARY KEY,
+  "clientName" TEXT NOT NULL,
+  "clientCity" TEXT,
+  "clientImage" TEXT,
+  message TEXT
+);
+
+-- 7. Site Config Table
+CREATE TABLE site_config (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  "aboutTitle" TEXT,
+  "aboutDescription" TEXT,
+  "shortIntro" TEXT,
+  "visionTitle" TEXT,
+  "visionDescription1" TEXT,
+  "visionDescription2" TEXT,
+  "contactEmail" TEXT,
+  "contactPhone" TEXT,
+  "whatsappShopping" TEXT,
+  "whatsappEnquiry" TEXT,
+  "whatsappComplaint" TEXT,
+  "whatsappNumber" TEXT,
+  "vastuRedirectUrl" TEXT,
+  address TEXT,
+  "statYearsExp" TEXT,
+  "statProjectsDone" TEXT,
+  "statVastuExp" TEXT,
+  "statVastuAudits" TEXT,
+  "accentColor" TEXT,
+  "headingFont" TEXT,
+  "bodyFont" TEXT,
+  "headingFontSize" TEXT,
+  "aboutImage1" TEXT,
+  "aboutImage2" TEXT,
+  "legacyImage" TEXT,
+  "heroMediaType" TEXT,
+  "heroMediaUrl" TEXT
+);
+
+--- END OF SQL SCRIPT ---
+
+3. SET ENVIRONMENT VARIABLES (Netlify/Vercel)
+   Add these exactly as named here:
+     * SUPABASE_URL = (From Settings > API > Project URL)
+     * SUPABASE_ANON_KEY = (From Settings > API > `anon public` key)
+     * ADMIN_ID = (Set your secret Staff ID)
+     * ADMIN_PASS = (Set your secret Passphrase)
+     * API_KEY = (Your Google Gemini AI Key)
+
+4. ALLOW WEBSITE URL (CORS)
+   - Go to Authentication > Settings > Configuration.
+   - In "Additional Redirect URLs", add your website URL (e.g., https://mahalak-consultants.netlify.app).
+
+5. SUCCESS!
+   - Your data is now synced between LocalStorage and Cloud.

@@ -1,0 +1,7 @@
+{
+  "name": "Copy of ArchiVastu - Design & Harmony Portfolio",
+  "description": "A premium React-based portfolio and e-commerce platform for Architecture, Interior Design, Civil Engineering, and Vastu Consultancy. Features a complete shopping experience, blogging, and project showcase.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

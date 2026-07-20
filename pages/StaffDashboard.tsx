@@ -42,7 +42,6 @@ const drawerWidth = 260;
 const collapsedWidth = 80;
 
 const menuItems = [
-    { text: "Users", icon: <PeopleIcon />, path: "/admin/users" },
     { text: "Products", icon: <Inventory2Icon />, path: "/admin/products" },
     { text: "Blogs", icon: <ArticleIcon />, path: "/admin/blogs" },
     { text: "Projects", icon: <WorkIcon />, path: "/admin/projects" },
@@ -66,7 +65,7 @@ const menuItems = [
     },
 ];
 
-const AdminDashboard = () => {
+const StaffDashboard = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -231,4 +230,4 @@ const AdminDashboard = () => {
     );
 };
 
-export default AdminDashboard;
+export default StaffDashboard;

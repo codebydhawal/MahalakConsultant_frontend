@@ -16,6 +16,9 @@ interface LoginProps {
 
 interface JwtPayload {
   sub: string;
+  id: number;
+  name: string;
+  role: string;
   iat: number;
   exp: number;
 }
@@ -66,14 +69,12 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      // navigate("/admin");
-      // // Decode JWT
+      // Decode JWT
       const decoded = jwtDecode<JwtPayload>(token);
 
       console.log("Decoded Token:", decoded);
 
-      // In your current JWT, 'sub' contains the role
-      const role = decoded.sub;
+      const role = decoded.role;
 
       // Store login information
       onLogin({

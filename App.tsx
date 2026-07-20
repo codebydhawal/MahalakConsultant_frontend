@@ -12,7 +12,7 @@ import { Cart } from './pages/Cart';
 import { Contact } from './pages/Contact';
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
-// import DashboardHome from "./pages/admin/DashboardHome";
+import StaffDashboard from "./pages/StaffDashboard";
 import { AIAdvisor } from './components/AIAdvisor';
 import { CartItem, Product, BlogPost, Project, TeamMember, Testimonial, SiteConfig, MediaItem } from './types';
 import { PRODUCTS as initialProducts, BLOGS as initialBlogs, PROJECTS as initialProjects } from './constants';
@@ -29,6 +29,13 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 
+import UserList from "./pages/common/users/UserList";
+import ViewUser from "./pages/common/users/ViewUser";
+import EditUsers from "./pages/common/users/EditUsers";
+import ProductList from "./pages/common/products/ProductList";
+import AddProduct from "./pages/common/products/AddProduct";
+import EditProduct from "./pages/common/products/EditProduct";
+import ViewProduct from "./pages/common/products/ViewProduct";
 
 // const [user, setUser] = useState<any>(() => {
 //   const savedUser = localStorage.getItem("user");
@@ -161,7 +168,7 @@ const Navbar: React.FC<{ cartCount: number, config: SiteConfig, user: any, onLog
                     fontWeight: "bold",
                   }}
                 >
-                  {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                  {user?.email?.charAt(0)?.toUpperCase()}
                 </Avatar>
 
                 <Menu
@@ -388,16 +395,6 @@ const App: React.FC = () => {
     initializeData();
   }, []);
 
-  useEffect(() => {
-    const root = document.documentElement;
-    root.style.setProperty('--accent-color', siteConfig.accentColor);
-    root.style.setProperty('--heading-font', siteConfig.headingFont);
-    root.style.setProperty('--body-font', siteConfig.bodyFont);
-
-    if (user) localStorage.setItem('mahalak_user', JSON.stringify(user));
-    else localStorage.removeItem('mahalak_user');
-  }, [siteConfig, user]);
-
   const addToCart = (product: Product) => {
     if (!user) {
       alert("Namaste! Please login to your account to add items to the cart.");
@@ -412,6 +409,8 @@ const App: React.FC = () => {
   };
 
   const handleLogout = () => {
+    localStorage.clear();
+
     setUser(null);
     setCart([]);
     window.location.hash = '#/';
@@ -442,20 +441,24 @@ const App: React.FC = () => {
             <Route path="/login" element={<Login onLogin={setUser} />} />
             <Route path="/register" element={<Register />} />
             <Route path="/contact" element={<Contact config={siteConfig} />} />
-            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin" element={<AdminDashboard />}>
+              <Route path="users" element={<UserList />} />
+              <Route path="users/view/:id" element={<ViewUser />} />
+              <Route path="users/edit/:id" element={<EditUsers />} />
+              {/* Product Routes */}
+              <Route path="products" element={<ProductList />} />
+              <Route path="products/add" element={<AddProduct />} />
+              <Route path="products/edit/:id" element={<EditProduct />} />
+              <Route path="products/view/:id" element={<ViewProduct />} />
+            </Route>
+            <Route path="/staff" element={<StaffDashboard />} >
+              {/* Product Routes */}
+              <Route path="products" element={<ProductList />} />
+              <Route path="products/add" element={<AddProduct />} />
+              <Route path="products/edit/:id" element={<EditProduct />} />
+              <Route path="products/view/:id" element={<ViewProduct />} />
+            </Route>
             <Route path="/cart" element={<Cart cart={cart} removeFromCart={removeFromCart} updateQuantity={updateQuantity} config={siteConfig} clearCart={clearCart} user={user} />} />
-            {/* <Route path="/admin" element={<Admin
-              products={products} setProducts={setProducts}
-              blogs={blogs} setBlogs={setBlogs}
-              projects={projects} setProjects={setProjects}
-              team={team} setTeam={setTeam}
-              media={media} setMedia={setMedia}
-              testimonials={testimonials} setTestimonials={setTestimonials}
-              siteConfig={siteConfig} setSiteConfig={setSiteConfig}
-            />} /> */}
-            {/* <Route path="/admin" element={<AdminDashboard />}>
-              <Route index element={<DashboardHome />} />
-            </Route> */}
           </Routes>
         </main>
         <Footer config={siteConfig} />

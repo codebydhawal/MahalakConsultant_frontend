@@ -25,11 +25,13 @@ import ProductService from "../../../services/ProductService";
 import { ProductRequest } from "../../../services/ProductRequest";
 import { ProductResponse } from "../../../services/ProductResponse";
 import { PRODUCT_CATEGORIES } from "../../../services/ProductConstants";
+import{getDashboardBasePath} from "../../../services/RouteUtils";
 
 const EditProduct = () => {
 
     const navigate = useNavigate();
     const { id } = useParams();
+    const basePath = getDashboardBasePath();
 
     const [image, setImage] = useState<File | null>(null);
     const [preview, setPreview] = useState("");
@@ -129,7 +131,7 @@ const EditProduct = () => {
 
             alert("Product updated successfully.");
 
-            navigate("/admin/products");
+            navigate(`${basePath}/products`);
 
         } catch (error: any) {
 
@@ -170,7 +172,7 @@ const EditProduct = () => {
             <Button
                 startIcon={<ArrowBack />}
                 sx={{ mb: 2 }}
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(`${basePath}/products`)}
             >
                 Back
             </Button>
@@ -384,7 +386,7 @@ const EditProduct = () => {
 
                         <Button
                             variant="outlined"
-                            onClick={() => navigate(-1)}
+                            onClick={() => navigate(`${basePath}/products`)}
                         >
                             Cancel
                         </Button>

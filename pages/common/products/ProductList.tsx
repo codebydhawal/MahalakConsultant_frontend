@@ -166,7 +166,7 @@ const ProductList = () => {
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             {...({
-                                InputProps: {
+                                SlotProps: {
                                     startAdornment: (
                                         <InputAdornment position="start">
                                             <Search />

@@ -13,6 +13,10 @@ import { Contact } from './pages/Contact';
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
 import StaffDashboard from "./pages/StaffDashboard";
+import BlogList from "./pages/common/blogs/BlogList";
+import AddBlog from "./pages/common/blogs/AddBlog";
+import EditBlog from "./pages/common/blogs/EditBlog";
+import ViewBlog from "./pages/common/blogs/ViewBlog";
 import { AIAdvisor } from './components/AIAdvisor';
 import { CartItem, Product, BlogPost, Project, TeamMember, Testimonial, SiteConfig, MediaItem } from './types';
 import { PRODUCTS as initialProducts, BLOGS as initialBlogs, PROJECTS as initialProjects } from './constants';
@@ -36,6 +40,7 @@ import ProductList from "./pages/common/products/ProductList";
 import AddProduct from "./pages/common/products/AddProduct";
 import EditProduct from "./pages/common/products/EditProduct";
 import ViewProduct from "./pages/common/products/ViewProduct";
+import ProductDetails from './pages/ProductDetails';
 
 // const [user, setUser] = useState<any>(() => {
 //   const savedUser = localStorage.getItem("user");
@@ -435,9 +440,16 @@ const App: React.FC = () => {
             <Route path="/" element={<Home projects={projects} blogs={blogs} media={media} testimonials={testimonials} config={siteConfig} />} />
             <Route path="/about" element={<About config={siteConfig} team={team} />} />
             <Route path="/portfolio" element={<Portfolio projects={projects} />} />
-            <Route path="/shop" element={<Shop products={products} addToCart={addToCart} user={user} />} />
-            <Route path="/blog" element={<Blog blogs={blogs} />} />
-            <Route path="/blog/:id" element={<BlogDetail blogs={blogs} />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route
+              path="shop/view/:id"
+              element={
+                <ProductDetails
+                />
+              }
+            />
+            <Route path="/blog" element={<Blog  />} />
+            <Route path="/blog/view/:id" element={<BlogDetail  />} />
             <Route path="/login" element={<Login onLogin={setUser} />} />
             <Route path="/register" element={<Register />} />
             <Route path="/contact" element={<Contact config={siteConfig} />} />
@@ -450,6 +462,11 @@ const App: React.FC = () => {
               <Route path="products/add" element={<AddProduct />} />
               <Route path="products/edit/:id" element={<EditProduct />} />
               <Route path="products/view/:id" element={<ViewProduct />} />
+              {/* Blog Routes */}
+              <Route path="blogs" element={<BlogList />} />
+              <Route path="blogs/add" element={<AddBlog />} />
+              <Route path="blogs/edit/:id" element={<EditBlog />} />
+              <Route path="blogs/view/:id" element={<ViewBlog />} />
             </Route>
             <Route path="/staff" element={<StaffDashboard />} >
               {/* Product Routes */}
@@ -457,6 +474,11 @@ const App: React.FC = () => {
               <Route path="products/add" element={<AddProduct />} />
               <Route path="products/edit/:id" element={<EditProduct />} />
               <Route path="products/view/:id" element={<ViewProduct />} />
+              {/* Blog Routes */}
+              <Route path="blogs" element={<BlogList />} />
+              <Route path="blogs/add" element={<AddBlog />} />
+              <Route path="blogs/edit/:id" element={<EditBlog />} />
+              <Route path="blogs/view/:id" element={<ViewBlog />} />
             </Route>
             <Route path="/cart" element={<Cart cart={cart} removeFromCart={removeFromCart} updateQuantity={updateQuantity} config={siteConfig} clearCart={clearCart} user={user} />} />
           </Routes>

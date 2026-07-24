@@ -24,10 +24,12 @@ import { useNavigate } from "react-router-dom";
 import ProductService from "../../../services/ProductService";
 import { ProductRequest } from "../../../services/ProductRequest";
 import { PRODUCT_CATEGORIES } from "../../../services/ProductConstants";
+import{getDashboardBasePath} from "../../../services/RouteUtils";
 
 const AddProduct = () => {
 
     const navigate = useNavigate();
+    const basePath = getDashboardBasePath();
 
     const [image, setImage] = useState<File | null>(null);
     const [preview, setPreview] = useState("");
@@ -113,7 +115,7 @@ const AddProduct = () => {
 
             alert(response.data.message);
 
-            navigate("/admin/products");
+            navigate(`${basePath}/products`);
 
         } catch (error: any) {
 
@@ -138,7 +140,7 @@ const AddProduct = () => {
             <Button
                 startIcon={<ArrowBack />}
                 sx={{ mb: 2 }}
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(`${basePath}/products`)}
             >
                 Back
             </Button>
@@ -366,7 +368,7 @@ const AddProduct = () => {
 
                         <Button
                             variant="outlined"
-                            onClick={() => navigate(-1)}
+                            onClick={() => navigate(`${basePath}/products`)}
                         >
                             Cancel
                         </Button>

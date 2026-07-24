@@ -17,11 +17,11 @@ import {
 } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import ProductService from "../../../services/ProductService";
-import { ProductResponse } from "../../../services/ProductResponse";
-import { getDashboardBasePath } from "../../../services/RouteUtils";
+import ProductService from "../services/ProductService";
+import { ProductResponse } from "../services/ProductResponse";
+import { getDashboardBasePath } from "../services/RouteUtils";
 
-const ViewProduct = () => {
+const ProductDetails = () => {
 
     const navigate = useNavigate();
     const { id } = useParams();
@@ -47,7 +47,7 @@ const ViewProduct = () => {
                 const productData = response.data.data;
 
                 console.log("Fetched product data:", productData);
-                
+
                 setProduct(productData);
 
                 setSelectedImage(productData.imageUrl);
@@ -290,7 +290,7 @@ const ViewProduct = () => {
                                     </Paper>
                                 </Grid> */}
 
-                                <Grid size={6}>
+                                {/* <Grid size={6}>
                                     <Paper sx={{ p: 2 }}>
                                         <Typography sx={{ fontWeight: 600 }}>
                                             Created
@@ -310,7 +310,7 @@ const ViewProduct = () => {
                                             {new Date(product.updatedAt).toLocaleString()}
                                         </Typography>
                                     </Paper>
-                                </Grid>
+                                </Grid> */}
 
                             </Grid>
 
@@ -342,5 +342,5 @@ const ViewProduct = () => {
     );
 };
 
-export default ViewProduct;
+export default ProductDetails;
 

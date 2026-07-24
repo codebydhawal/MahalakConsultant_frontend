@@ -87,11 +87,11 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
       // Redirect based on role
       switch (role) {
         case "ADMIN":
-          navigate("/admin");
+          navigate("/admin/users");
           break;
 
         case "STAFF":
-          navigate("/staff");
+          navigate("/staff/products");
           break;
 
         case "CUSTOMER":

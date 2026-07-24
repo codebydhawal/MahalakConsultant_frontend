@@ -1,37 +1,279 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { BlogPost } from '../types';
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  SelectChangeEvent,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TextField,
+  Typography,
+  CardMedia,
+  CardActions,
+  Grid,
+} from "@mui/material";
 
-export const Blog: React.FC<{ blogs: BlogPost[] }> = ({ blogs }) => {
+import {
+  Add,
+  Delete,
+  Edit,
+  Search,
+  Visibility,
+} from "@mui/icons-material";
+
+import BlogService from "../services/BlogService";
+import { BlogResponse } from "../services/BlogResponse";
+import { BlogStatus } from "../services/BlogConstants";
+
+export const Blog: React.FC = () => {
+
+  const navigate = useNavigate();
+
+  const [blogs, setBlogs] = useState<BlogResponse[]>([]);
+  const [filteredBlogs, setFilteredBlogs] = useState<BlogResponse[]>([]);
+
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  useEffect(() => {
+    loadBlogs();
+  }, []);
+
+  useEffect(() => {
+
+    let data = blogs;
+
+    if (search.trim() !== "") {
+      data = data.filter((blog) =>
+        blog.title.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    if (status !== "") {
+      data = data.filter((blog) => blog.status === BlogStatus.PUBLISHED);
+    }
+
+    setFilteredBlogs(data);
+
+  }, [search, status, blogs]);
+
+  const loadBlogs = () => {
+
+    BlogService.getAllBlogs()
+      .then((response) => {
+
+        setBlogs(response.data.data);
+        setFilteredBlogs(response.data.data);
+
+      })
+      .catch(console.error);
+  };
+
+  const deleteBlog = (blogId: string) => {
+
+    if (!window.confirm("Delete this blog?")) return;
+
+    BlogService.deleteBlog(blogId)
+      .then(() => loadBlogs())
+      .catch(console.error);
+
+  };
+
+  const handleStatus = (
+    event: SelectChangeEvent
+  ) => {
+
+    setStatus(event.target.value);
+
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-32 overflow-x-hidden">
-      <div className="mb-24 text-center px-4">
-        <h2 className="text-xs font-bold uppercase tracking-[0.4em] text-amber-700 mb-6">Our Journals</h2>
-        <h1 className="text-5xl md:text-7xl font-bold text-stone-900 mb-4 tracking-tighter">Wisdom & Innovation</h1>
-        <p className="text-stone-400 text-lg max-w-xl mx-auto font-light">Insights from leading architects, Vastu masters, and engineers.</p>
-      </div>
 
-      {/* Mobile Slider Grid */}
-      <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-16 overflow-x-auto md:overflow-visible no-scrollbar -mx-4 px-8 pb-10 snap-x snap-mandatory">
-        {blogs.map(post => (
-          <Link to={`/blog/${post.id}`} key={post.id} className="group flex flex-col shrink-0 w-[320px] sm:w-[380px] md:w-auto snap-center">
-            <div className="overflow-hidden rounded-[2.5rem] mb-10 aspect-[16/10] bg-stone-100 shadow-xl group-hover:shadow-amber-700/10 transition-all">
-              <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-            </div>
-            <div className="flex items-center text-[10px] text-amber-700 font-bold uppercase tracking-widest mb-4 gap-4">
-              <span>{post.date}</span>
-              <span className="w-1 h-1 bg-amber-700 rounded-full"></span>
-              <span>5 Min Read</span>
-            </div>
-            <h2 className="text-3xl font-bold text-stone-900 mb-4 group-hover:text-amber-700 transition-colors leading-tight">{post.title}</h2>
-            <p className="text-stone-500 text-sm leading-relaxed mb-6 line-clamp-3 font-medium">{post.excerpt}</p>
-            <div className="mt-auto text-xs font-bold uppercase tracking-widest text-stone-900 flex items-center gap-3">
-              Explore Story <i className="fa-solid fa-arrow-right-long transition-transform group-hover:translate-x-2"></i>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </div>
+    <Box>
+
+      <Card>
+        <CardContent>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 3,
+            }}
+          >
+
+            <Typography variant="h5" component="h5" sx={{ fontWeight: "bold" }}>
+
+              Blogs
+
+            </Typography>
+
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              mb: 3,
+            }}
+          >
+
+            <TextField
+              fullWidth
+              placeholder="Search Blog..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+
+          </Box>
+
+          <Paper sx={{ p: 3 }}>
+
+            <Grid container spacing={3}>
+
+              {filteredBlogs
+                .slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
+                .map((blog) => (
+
+                  <Grid
+                    key={blog.id}
+                    size={{ xs: 12, sm: 6, md: 4 }}
+                  >
+
+                    <Card
+                      onClick={() => navigate(`view/${blog.id}`)}
+                      sx={{
+                        borderRadius: 4,
+                        overflow: "hidden",
+                        transition: "0.3s",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        "&:hover": {
+                          transform: "translateY(-6px)",
+                          boxShadow: 8,
+                        },
+                      }}
+                    >
+
+                      <Box
+                        sx={{
+                          width: "100%",
+                          height: 220,
+                          overflow: "hidden",
+                        }}
+                      >
+
+                        <img
+                          src={blog.featuredImageUrl}
+                          alt={blog.title}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            display: "block",
+                          }}
+                          onLoad={() => console.log("Loaded")}
+                          onError={(e) => {
+                            console.log("Image failed");
+
+                            const img = e.currentTarget;
+                          }}
+                        />
+                      </Box>
+
+                      <CardContent sx={{ flexGrow: 1 }}>
+
+                        <Typography
+                          sx={{ variant: "h6", fontWeight: "bold" }}
+                        >
+                          {blog.title}
+                        </Typography>
+
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ mt: 1 }}
+                        >
+                          {blog.authorName}
+                        </Typography>
+
+                        <Typography
+                          variant="body2"
+                          sx={{ mt: 1 }}
+                        >
+                          {blog.category}
+                        </Typography>
+
+                      </CardContent>
+                    </Card>
+
+                  </Grid>
+
+                ))}
+
+            </Grid>
+
+            <TablePagination
+              component="div"
+              count={filteredBlogs.length}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={(e, newPage) =>
+                setPage(newPage)
+              }
+              onRowsPerPageChange={(e) => {
+
+                setRowsPerPage(
+                  parseInt(e.target.value, 10)
+                );
+
+                setPage(0);
+
+              }}
+            />
+
+          </Paper>
+
+        </CardContent>
+
+      </Card>
+
+    </Box >
+
   );
+
 };

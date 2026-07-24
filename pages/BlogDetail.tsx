@@ -1,114 +1,381 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-import React from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { BlogPost } from '../types';
 
-export const BlogDetail: React.FC<{ blogs: BlogPost[] }> = ({ blogs }) => {
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  Chip,
+  CircularProgress,
+  Divider,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
+
+import {
+  ArrowBack,
+  CalendarMonth,
+  Category,
+  Person,
+} from "@mui/icons-material";
+
+import BlogService from "../services/BlogService";
+import { BlogResponse } from "../services/BlogResponse";
+import { getDashboardBasePath } from "../services/RouteUtils";
+// TypeScript may not have type declarations for these CSS side-effect imports.
+// @ts-ignore: allow importing CSS for react-pdf
+import "react-pdf/dist/Page/TextLayer.css";
+// @ts-ignore: allow importing CSS for react-pdf
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import { Document, Page } from "react-pdf";
+import { pdfjs } from "react-pdf";
+// @ts-ignore: allow importing PDF worker for react-pdf
+import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+
+pdfjs.GlobalWorkerOptions.workerSrc = pdfWorker;
+
+export const BlogDetail: React.FC = () => {
+
   const { id } = useParams();
-  const navigate = useNavigate();
-  const blog = blogs.find(b => b.id === Number(id));
 
-  if (!blog) return (
-    <div className="py-20 text-center">
-      <h2 className="text-2xl font-bold">Article not found</h2>
-      <button onClick={() => navigate('/blog')} className="mt-4 text-amber-700 underline font-bold">Back to Articles</button>
-    </div>
-  );
+  const navigate = useNavigate();
+
+  const basePath = getDashboardBasePath();
+
+  const [loading, setLoading] = useState(true);
+
+  const [blog, setBlog] = useState<BlogResponse>();
+
+  const [numPages, setNumPages] = useState(0);
+
+
+  useEffect(() => {
+
+    if (id) {
+      loadBlog();
+    }
+
+  }, [id]);
+
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    setNumPages(numPages);
+  };
+
+  const loadBlog = async () => {
+
+    try {
+
+      const response = await BlogService.getBlogById(id as string);
+
+      const blogData = response.data.data;
+
+      setBlog(blogData);
+
+      console.log("setBlog done");
+
+    } catch (e) {
+
+      console.log(e);
+
+    } finally {
+
+      console.log("finally");
+
+      setLoading(false);
+
+    }
+  };
+
+  if (loading) {
+
+    return (
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mt: 10,
+        }}
+      >
+        <CircularProgress />
+      </Box>
+
+    );
+
+  }
+
+  if (!blog) {
+
+    return (
+
+      <Typography>
+
+        Blog not found.
+
+      </Typography>
+
+    );
+
+  }
 
   return (
-    <div className="bg-white min-h-screen pb-24 animate-in fade-in duration-700">
-      <div className="relative h-[65vh] bg-stone-900 overflow-hidden">
-        <img src={blog.image} className="w-full h-full object-cover opacity-60 scale-105" alt={blog.title} />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-stone-950/90"></div>
-        <div className="absolute inset-0 flex items-end justify-center pb-20 px-4">
-          <div className="max-w-4xl text-center">
-             <div className="flex justify-center gap-3 mb-8">
-                <span className="px-5 py-1.5 bg-amber-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-full">Article</span>
-                <span className="px-5 py-1.5 bg-white/10 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest rounded-full border border-white/20">{blog.readingTime}</span>
-             </div>
-             <h1 className="text-4xl md:text-7xl font-bold text-white leading-[1.1] mb-8 tracking-tighter">{blog.title}</h1>
-             <div className="flex justify-center items-center gap-8 text-stone-400 text-[11px] font-bold uppercase tracking-[0.3em]">
-               <span>{new Date(blog.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-               <span className="w-1.5 h-1.5 bg-amber-600 rounded-full"></span>
-               <span>By {blog.author}</span>
-             </div>
-          </div>
-        </div>
-      </div>
 
-      <div className="max-w-4xl mx-auto px-6 mt-20">
-        <div className="mb-16">
-          <Link to="/blog" className="text-[10px] font-bold uppercase text-stone-400 hover:text-amber-700 flex items-center gap-3 transition-colors">
-            <i className="fa-solid fa-arrow-left-long"></i> Return to journals
-          </Link>
-        </div>
-        
-        <div className="prose-container">
-          <div className="text-2xl text-stone-600 leading-relaxed font-light mb-16 italic border-l-[6px] border-amber-600 pl-10 py-4 bg-stone-50 rounded-r-3xl">
-            {blog.excerpt}
-          </div>
-          
-          <div 
-            className="rich-text-content text-stone-800 leading-[1.8] text-lg space-y-8"
-            dangerouslySetInnerHTML={{ __html: blog.content }}
-          ></div>
-        </div>
+    <Box>
 
-        <div className="mt-24 pt-16 border-t border-stone-100 flex flex-col md:flex-row items-center justify-between gap-10 bg-stone-50 p-10 rounded-[3rem]">
-           <div className="flex items-center gap-8">
-              <div className="w-24 h-24 rounded-full bg-stone-200 flex items-center justify-center text-4xl text-stone-400 overflow-hidden shadow-lg border-4 border-white">
-                 {blog.authorImage ? (
-                   <img src={blog.authorImage} alt={blog.author} className="w-full h-full object-cover" />
-                 ) : (
-                   <i className="fa-solid fa-user-tie"></i>
-                 )}
-              </div>
-              <div>
-                <p className="text-amber-700 text-[10px] uppercase font-bold tracking-[0.3em] mb-2">Editor's Choice</p>
-                <p className="font-bold text-2xl text-stone-900">{blog.author}</p>
-                <p className="text-stone-400 text-xs font-medium">Principal Design Consultant</p>
-              </div>
-           </div>
-           <div className="flex gap-4">
-              <button className="w-12 h-12 rounded-full bg-white border border-stone-200 flex items-center justify-center hover:bg-amber-600 hover:text-white transition-all shadow-sm"><i className="fa-brands fa-facebook-f"></i></button>
-              <button className="w-12 h-12 rounded-full bg-white border border-stone-200 flex items-center justify-center hover:bg-amber-600 hover:text-white transition-all shadow-sm"><i className="fa-brands fa-twitter"></i></button>
-              <button className="w-12 h-12 rounded-full bg-white border border-stone-200 flex items-center justify-center hover:bg-amber-600 hover:text-white transition-all shadow-sm"><i className="fa-solid fa-share-nodes"></i></button>
-           </div>
-        </div>
-      </div>
+      <Button
+        startIcon={<ArrowBack />}
+        sx={{ mb: 3 }}
+        onClick={() => navigate(`${basePath}/blogs`)}
+      >
+        Back
+      </Button>
 
-      <style>{`
-        .rich-text-content h1, .rich-text-content h2, .rich-text-content h3 {
-          font-weight: 800;
-          color: #1c1917;
-          margin-top: 2em;
-          margin-bottom: 0.5em;
-        }
-        .rich-text-content a {
-          color: #b45309;
-          text-decoration: underline;
-          font-weight: 700;
-          transition: all 0.3s ease;
-        }
-        .rich-text-content a:hover {
-          color: #78350f;
-          opacity: 0.8;
-        }
-        .rich-text-content img {
-          border-radius: 2rem;
-          margin: 2.5rem 0;
-          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-        }
-        .rich-text-content table {
-          width: 100%;
-          border-radius: 1rem;
-          overflow: hidden;
-          margin: 2rem 0;
-        }
-        .rich-text-content p {
-          margin-bottom: 1.5rem;
-        }
-      `}</style>
-    </div>
+      {/* Featured Image */}
+
+      <Card elevation={3}>
+
+        <CardMedia
+          component="img"
+          image={blog.featuredImageUrl}
+          sx={{
+            height: 450,
+            objectFit: "cover",
+          }}
+        />
+
+      </Card>
+
+      {/* PDF */}
+
+      {/* <Paper
+                elevation={3}
+                sx={{
+                    mt: 4,
+                    p: 2,
+                }}
+            >
+
+                <iframe
+                    src={blog.contentFileUrl}
+                    title="Blog PDF"
+                    width="100%"
+                    height="900px"
+                    style={{
+                        border: 0,
+                        borderRadius: 10,
+                    }}
+                />
+
+            </Paper> */}
+
+      <Paper
+        elevation={3}
+        sx={{
+          mt: 4,
+          p: 3,
+        }}
+      >
+
+        <Typography
+          variant="h5"
+          gutterBottom
+        >
+          Blog Content
+        </Typography>
+
+        <Document
+          file={`http://localhost:8080/rest/blog/pdf/${blog.contentFileId}`}
+          // file={`/BLOG_Dhawal Bahe new.pdf`}
+          onLoadSuccess={onDocumentLoadSuccess}
+          loading={<CircularProgress />}
+        >
+
+          {Array.from(new Array(numPages), (_, index) => {
+
+            return (
+              <Page
+                key={index}
+                pageNumber={index + 1}
+                width={900}
+              />
+            );
+          })}
+
+        </Document>
+
+      </Paper>
+
+      {/* Blog Details */}
+
+      <Card
+        sx={{
+          mt: 4,
+        }}
+      >
+
+        <CardContent>
+
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: 'bold' }}
+          >
+            {blog.title}
+          </Typography>
+
+          <Stack
+            direction="row"
+            spacing={4}
+            sx={{
+              mt: 3,
+              flexWrap: "wrap",
+              rowGap: 2,
+            }}
+          >
+
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ alignItems: "center" }}
+            >
+
+              <Category />
+
+              <Typography>
+
+                {blog.category}
+
+              </Typography>
+
+            </Stack>
+
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ alignItems: "center" }}
+            >
+
+              <CalendarMonth />
+
+              <Typography>
+
+                {blog.publishDate}
+
+              </Typography>
+
+            </Stack>
+
+            <Chip
+              label={blog.status}
+              color={
+                blog.status === "PUBLISHED"
+                  ? "success"
+                  : blog.status === "DRAFT"
+                    ? "warning"
+                    : "default"
+              }
+            />
+
+          </Stack>
+
+          <Divider
+            sx={{
+              my: 4,
+            }}
+          />
+
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ alignItems: "center" }}
+          >
+            <Avatar
+              src={blog.authorImageUrl}
+              sx={{
+                width: 70,
+                height: 70,
+              }}
+            />
+
+            <Stack>
+
+              <Typography
+                variant="subtitle2"
+                color="text.secondary"
+              >
+
+                Author
+
+              </Typography>
+
+              <Typography
+                variant="h6"
+              >
+
+                {blog.authorName}
+
+              </Typography>
+
+            </Stack>
+
+          </Stack>
+
+          <Divider
+            sx={{
+              my: 4,
+            }}
+          />
+
+          <Typography
+            variant="h6"
+            gutterBottom
+          >
+
+            Short Description
+
+          </Typography>
+
+          <Typography
+            color="text.secondary"
+          >
+
+            {blog.shortDescription}
+
+          </Typography>
+
+          <Divider
+            sx={{
+              my: 4,
+            }}
+          />
+
+          <Typography
+            variant="h6"
+            gutterBottom
+          >
+
+            Tags
+
+          </Typography>
+
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{ flexWrap: 'wrap', gap: 8 }}
+          >
+
+          </Stack>
+
+        </CardContent>
+
+      </Card>
+
+    </Box>
+
   );
+
 };

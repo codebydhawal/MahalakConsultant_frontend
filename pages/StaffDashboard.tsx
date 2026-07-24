@@ -42,26 +42,26 @@ const drawerWidth = 260;
 const collapsedWidth = 80;
 
 const menuItems = [
-    { text: "Products", icon: <Inventory2Icon />, path: "/admin/products" },
-    { text: "Blogs", icon: <ArticleIcon />, path: "/admin/blogs" },
-    { text: "Projects", icon: <WorkIcon />, path: "/admin/projects" },
-    { text: "Team", icon: <GroupsIcon />, path: "/admin/team" },
-    { text: "Media", icon: <PhotoLibraryIcon />, path: "/admin/media" },
-    { text: "Testimonials", icon: <ReviewsIcon />, path: "/admin/testimonials", },
+    { text: "Products", icon: <Inventory2Icon />, path: "/staff/products" },
+    { text: "Blogs", icon: <ArticleIcon />, path: "/staff/blogs" },
+    { text: "Projects", icon: <WorkIcon />, path: "/staff/projects" },
+    { text: "Team", icon: <GroupsIcon />, path: "/staff/team" },
+    { text: "Media", icon: <PhotoLibraryIcon />, path: "/staff/media" },
+    { text: "Testimonials", icon: <ReviewsIcon />, path: "/staff/testimonials" },
     {
         text: "Config",
         icon: <TuneIcon />,
-        path: "/admin/config",
+        path: "/staff/config",
     },
     {
         text: "Security Info",
         icon: <AdminPanelSettingsIcon />,
-        path: "/admin/SecurityInfo",
+        path: "/staff/SecurityInfo",
     },
     {
         text: "Cloud Setup",
         icon: <CloudSyncIcon />,
-        path: "/admin/CloudSetup",
+        path: "/staff/CloudSetup",
     },
 ];
 

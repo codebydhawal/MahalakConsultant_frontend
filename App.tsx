@@ -41,6 +41,9 @@ import AddProduct from "./pages/common/products/AddProduct";
 import EditProduct from "./pages/common/products/EditProduct";
 import ViewProduct from "./pages/common/products/ViewProduct";
 import ProductDetails from './pages/ProductDetails';
+import ProjectList from './pages/common/projects/ProjectList';
+import AddProject from './pages/common/projects/AddProject';
+import ViewProject from './pages/common/projects/ViewProject';
 
 // const [user, setUser] = useState<any>(() => {
 //   const savedUser = localStorage.getItem("user");
@@ -439,17 +442,11 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home projects={projects} blogs={blogs} media={media} testimonials={testimonials} config={siteConfig} />} />
             <Route path="/about" element={<About config={siteConfig} team={team} />} />
-            <Route path="/portfolio" element={<Portfolio projects={projects} />} />
+            <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/shop" element={<Shop />} />
-            <Route
-              path="shop/view/:id"
-              element={
-                <ProductDetails
-                />
-              }
-            />
-            <Route path="/blog" element={<Blog  />} />
-            <Route path="/blog/view/:id" element={<BlogDetail  />} />
+            <Route path="shop/view/:id" element={<ProductDetails />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blogs/view/:id" element={<BlogDetail />} />
             <Route path="/login" element={<Login onLogin={setUser} />} />
             <Route path="/register" element={<Register />} />
             <Route path="/contact" element={<Contact config={siteConfig} />} />
@@ -467,6 +464,11 @@ const App: React.FC = () => {
               <Route path="blogs/add" element={<AddBlog />} />
               <Route path="blogs/edit/:id" element={<EditBlog />} />
               <Route path="blogs/view/:id" element={<ViewBlog />} />
+              {/* Project Routes */}
+              <Route path="projects" element={<ProjectList />} />
+              <Route path="projects/add" element={<AddProject />} />
+              {/* <Route path="projects/edit/:id" element={<EditProject />} /> */}
+              <Route path="projects/view/:id" element={<ViewProject />} />
             </Route>
             <Route path="/staff" element={<StaffDashboard />} >
               {/* Product Routes */}
@@ -479,6 +481,11 @@ const App: React.FC = () => {
               <Route path="blogs/add" element={<AddBlog />} />
               <Route path="blogs/edit/:id" element={<EditBlog />} />
               <Route path="blogs/view/:id" element={<ViewBlog />} />
+              {/* Project Routes */}
+              <Route path="projects" element={<ProjectList />} />
+              <Route path="projects/add" element={<AddProject />} />
+              {/* <Route path="projects/edit/:id" element={<EditProject />} /> */}
+              <Route path="projects/view/:id" element={<ViewProject />} />
             </Route>
             <Route path="/cart" element={<Cart cart={cart} removeFromCart={removeFromCart} updateQuantity={updateQuantity} config={siteConfig} clearCart={clearCart} user={user} />} />
           </Routes>

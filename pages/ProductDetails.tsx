@@ -13,7 +13,8 @@ import {
 } from "@mui/material";
 import {
     ArrowBack,
-    Edit,
+    ShoppingCart,
+    Bolt,
 } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
@@ -313,19 +314,49 @@ const ProductDetails = () => {
                                 </Grid> */}
 
                             </Grid>
-
                             <Stack
-                                direction="row"
+                                direction={{ xs: "column", sm: "row" }}
                                 spacing={2}
-                                sx={{ mt: 4, justifyContent: "flex-end" }}
+                                sx={{ mt: 4 }}
                             >
+                                <Button
+                                    variant="contained"
+                                    fullWidth
+                                    size="large"
+                                    sx={{
+                                        py: 1.5,
+                                        borderRadius: 2,
+                                        backgroundColor: "#f59e0b",
+                                        "&:hover": {
+                                            backgroundColor: "#d97706",
+                                        },
+                                    }}
+                                >
+                                    Add to Cart
+                                </Button>
 
                                 <Button
+                                    variant="contained"
+                                    fullWidth
+                                    size="large"
+                                    sx={{
+                                        py: 1.5,
+                                        borderRadius: 2,
+                                        backgroundColor: "#111827",
+                                        "&:hover": {
+                                            backgroundColor: "#374151",
+                                        },
+                                    }}
+                                >
+                                    Buy Now
+                                </Button>
+
+                                {/* <Button
                                     variant="outlined"
                                     onClick={() => navigate(`${basePath}/products`)}
                                 >
                                     Back
-                                </Button>
+                                </Button> */}
 
                             </Stack>
 

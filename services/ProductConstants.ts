@@ -1,6 +1,6 @@
 export const PRODUCT_CATEGORIES = [
-    "Shirts",
-    "Jeans",
-    "T-Shirts",
-    "Jackets",
+    "Vastu",
+    "Interior",
+    "Decor",
+    "Exterior",
 ];

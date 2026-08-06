@@ -1,42 +1,23 @@
-import { useState } from "react";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import ArticleIcon from "@mui/icons-material/Article";
+import CloudSyncIcon from "@mui/icons-material/CloudSync";
+import GroupsIcon from "@mui/icons-material/Groups";
+import Inventory2Icon from "@mui/icons-material/Inventory2";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PeopleIcon from "@mui/icons-material/People";
+import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
+import ReviewsIcon from "@mui/icons-material/Reviews";
+import TuneIcon from "@mui/icons-material/Tune";
+import WorkIcon from "@mui/icons-material/Work";
 import {
-    AppBar,
-    Avatar,
     Box,
-    CssBaseline,
-    Drawer,
-    IconButton,
     List,
     ListItemButton,
     ListItemIcon,
-    ListItemText,
-    Toolbar,
-    Typography,
-    Divider,
-    Menu,
-    MenuItem,
-    Tooltip,
-    Chip,
+    ListItemText
 } from "@mui/material";
+import { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import SearchIcon from "@mui/icons-material/Search";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import PeopleIcon from "@mui/icons-material/People";
-import Inventory2Icon from "@mui/icons-material/Inventory2";
-import ArticleIcon from "@mui/icons-material/Article";
-import WorkIcon from "@mui/icons-material/Work";
-import GroupsIcon from "@mui/icons-material/Groups";
-import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
-import ReviewsIcon from "@mui/icons-material/Reviews";
-import SettingsIcon from "@mui/icons-material/Settings";
-import LogoutIcon from "@mui/icons-material/Logout";
-import MenuIcon from "@mui/icons-material/Menu";
-import MenuOpenIcon from "@mui/icons-material/MenuOpen";
-import TuneIcon from "@mui/icons-material/Tune";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import CloudSyncIcon from "@mui/icons-material/CloudSync";
 
 const drawerWidth = 260;
 const collapsedWidth = 80;
@@ -90,10 +71,10 @@ const AdminDashboard = () => {
         setAnchorEl(null);
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        navigate("/login");
-    };
+    // const handleLogout = () => {
+    //     localStorage.removeItem("token");
+    //     navigate("/login");
+    // };
 
     const drawerContent = (
         <Box
@@ -167,16 +148,16 @@ const AdminDashboard = () => {
 
             <Box sx={{ mt: "auto", p: 2 }}>
                 <ListItemButton
-                    onClick={handleLogout}
+                    // onClick={handleLogout}
                     sx={{
                         borderRadius: 2,
                     }}
                 >
-                    <ListItemIcon sx={{ color: "#fff" }}>
+                    {/* <ListItemIcon sx={{ color: "#fff" }}>
                         <LogoutIcon />
-                    </ListItemIcon>
+                    </ListItemIcon> */}
 
-                    {!collapsed && <ListItemText
+                    {/* {!collapsed && <ListItemText
                         primary={
                             <Typography
                                 sx={{
@@ -187,7 +168,7 @@ const AdminDashboard = () => {
                                 Logout
                             </Typography>
                         }
-                    />}
+                    />} */}
                 </ListItemButton>
             </Box>
         </Box>

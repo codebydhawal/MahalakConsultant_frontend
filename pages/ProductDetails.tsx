@@ -21,13 +21,23 @@ import { useNavigate, useParams } from "react-router-dom";
 import ProductService from "../services/ProductService";
 import { ProductResponse } from "../services/ProductResponse";
 import { getDashboardBasePath } from "../services/RouteUtils";
+import { useDispatch } from "react-redux";
+import CartService from "../services/CartService";
+import { CartRequest } from "../services/CartRequest";
+
+import {
+    setCart,
+    setCartLoading,
+    setCartError,
+} from "@/slices/cartSlice";
 
 const ProductDetails = () => {
 
     const navigate = useNavigate();
     const { id } = useParams();
     const basePath = getDashboardBasePath();
-
+    const dispatch = useDispatch();
+    const [quantity, setQuantity] = useState(1);
     const [product, setProduct] = useState<ProductResponse | null>(null);
     const [selectedImage, setSelectedImage] = useState("");
     const [loading, setLoading] = useState(true);
@@ -68,6 +78,27 @@ const ProductDetails = () => {
         fetchProduct();
 
     }, [id]);
+
+    const addToCart = async () => {
+        if (!product) return;
+
+        try {
+            dispatch(setCartLoading(true));
+
+            const request: CartRequest = {
+                productId: product.productId,
+                quantity,
+            };
+
+            const response = await CartService.addToCart(request);
+
+            dispatch(setCart(response.data.data));
+        } catch (error) {
+            console.error(error);
+            dispatch(setCartError("Unable to add product to cart."));
+        }
+    };
+
 
     if (loading) {
         return (
@@ -234,131 +265,61 @@ const ProductDetails = () => {
                                 Specifications
                             </Typography>
 
-                            <Grid container spacing={2}>
+                            <Divider sx={{ my: 3 }} />
 
-                                {/* <Grid size={6}>
-                                    <Paper sx={{ p: 2 }}>
-                                        <Typography sx={{ fontWeight: 600 }}>
-                                            SKU
-                                        </Typography>
-                                        <Typography>
-                                            {product.sku}
-                                        </Typography>
-                                    </Paper>
-                                </Grid>
+                            <Typography variant="h6" gutterBottom>
+                                Quantity
+                            </Typography>
 
-                                <Grid size={6}>
-                                    <Paper sx={{ p: 2 }}>
-                                        <Typography sx={{ fontWeight: 600 }}>
-                                            Material
-                                        </Typography>
-                                        <Typography>
-                                            {product.material}
-                                        </Typography>
-                                    </Paper>
-                                </Grid>
-
-                                <Grid size={6}>
-                                    <Paper sx={{ p: 2 }}>
-                                        <Typography sx={{ fontWeight: 600 }}>
-                                            Color
-                                        </Typography>
-                                        <Typography>
-                                            {product.color}
-                                        </Typography>
-                                    </Paper>
-                                </Grid>
-
-                                <Grid size={6}>
-                                    <Paper sx={{ p: 2 }}>
-                                        <Typography sx={{ fontWeight: 600 }}>
-                                            Size
-                                        </Typography>
-                                        <Typography>
-                                            {product.size}
-                                        </Typography>
-                                    </Paper>
-                                </Grid>
-
-                                <Grid size={6}>
-                                    <Paper sx={{ p: 2 }}>
-                                        <Typography sx={{ fontWeight: 600 }}>
-                                            Weight
-                                        </Typography>
-                                        <Typography>
-                                            {product.weight}
-                                        </Typography>
-                                    </Paper>
-                                </Grid> */}
-
-                                {/* <Grid size={6}>
-                                    <Paper sx={{ p: 2 }}>
-                                        <Typography sx={{ fontWeight: 600 }}>
-                                            Created
-                                        </Typography>
-                                        <Typography>
-                                            {new Date(product.createdAt).toLocaleString()}
-                                        </Typography>
-                                    </Paper>
-                                </Grid>
-
-                                <Grid size={{ xs: 12 }}>
-                                    <Paper sx={{ p: 2 }}>
-                                        <Typography sx={{ fontWeight: 600 }}>
-                                            Updated
-                                        </Typography>
-                                        <Typography>
-                                            {new Date(product.updatedAt).toLocaleString()}
-                                        </Typography>
-                                    </Paper>
-                                </Grid> */}
-
-                            </Grid>
                             <Stack
-                                direction={{ xs: "column", sm: "row" }}
+                                direction="row"
                                 spacing={2}
-                                sx={{ mt: 4 }}
+                                sx={{ mt: 2, mb: 3, alignItems: "center" }}
                             >
                                 <Button
+                                    variant="outlined"
+                                    onClick={() =>
+                                        setQuantity((q) => Math.max(1, q - 1))
+                                    }
+                                >
+                                    -
+                                </Button>
+
+                                <Typography variant="h6">
+                                    {quantity}
+                                </Typography>
+
+                                <Button
+                                    variant="outlined"
+                                    onClick={() =>
+                                        setQuantity((q) =>
+                                            Math.min(product.stock, q + 1)
+                                        )
+                                    }
+                                >
+                                    +
+                                </Button>
+                            </Stack>
+                            <div className="mt-8 flex gap-4">
+                                <Button
                                     variant="contained"
-                                    fullWidth
-                                    size="large"
-                                    sx={{
-                                        py: 1.5,
-                                        borderRadius: 2,
-                                        backgroundColor: "#f59e0b",
-                                        "&:hover": {
-                                            backgroundColor: "#d97706",
-                                        },
+                                    startIcon={<ShoppingCart />}
+                                    onClick={async () => {
+                                        await addToCart();
+                                        navigate("/cart");
                                     }}
                                 >
-                                    Add to Cart
+                                    Add To Cart
                                 </Button>
 
                                 <Button
                                     variant="contained"
-                                    fullWidth
-                                    size="large"
-                                    sx={{
-                                        py: 1.5,
-                                        borderRadius: 2,
-                                        backgroundColor: "#111827",
-                                        "&:hover": {
-                                            backgroundColor: "#374151",
-                                        },
-                                    }}
+                                    color="secondary"
+                                    startIcon={<Bolt />}
                                 >
                                     Buy Now
                                 </Button>
-
-                                {/* <Button
-                                    variant="outlined"
-                                    onClick={() => navigate(`${basePath}/products`)}
-                                >
-                                    Back
-                                </Button> */}
-
-                            </Stack>
+                            </div>
 
                         </CardContent>
 
@@ -374,4 +335,3 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
-

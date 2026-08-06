@@ -34,13 +34,17 @@ import { useEffect, useState } from "react";
 import { ProductResponse } from "../services/ProductResponse";
 import { PRODUCT_CATEGORIES } from "../services/ProductConstants"
 import ProductService from "../services/ProductService";
+import CartService from "../services/CartService";
+import { CartRequest } from "../services/CartRequest";
+import { useAppDispatch } from "../store/hooks";
+import { setCart, setCartLoading, setCartError } from "../slices/cartSlice";
 
 export const Shop: React.FC = () => {
   const navigate = useNavigate();
 
   const [products, setProducts] = useState<ProductResponse[]>([]);
   const [loading, setLoading] = useState(false);
-
+  const dispatch = useAppDispatch();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [search, setSearch] = useState("");
@@ -48,6 +52,7 @@ export const Shop: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedProduct, setSelectedProduct] =
     useState<ProductResponse | null>(null);
+  const [quantity, setQuantity] = useState(1);
 
   const formatCategory = (category: string) =>
     category
@@ -121,6 +126,41 @@ export const Shop: React.FC = () => {
     );
   }
 
+  const addToCart = async (
+    productId: string,
+    quantity: number
+  ) => {
+
+    try {
+
+      const request: CartRequest = {
+
+        productId,
+        quantity,
+
+      };
+
+      dispatch(setCartLoading(true));
+
+      const response = await CartService.addToCart(request);
+
+      dispatch(setCart(response.data.data));
+
+    } catch (error) {
+
+      console.error(error);
+
+      dispatch(setCartError("Unable to add product to cart."));
+
+    }
+  };
+
+  const buyNow = (productId: number, quantity: number) => {
+    console.log("Buy Now", productId, quantity);
+    alert(`Proceeding to buy ${quantity} of product ID ${productId}.`);
+    // Navigate to checkout
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-16 animate-in fade-in duration-700 overflow-x-hidden">
 
@@ -193,7 +233,10 @@ export const Shop: React.FC = () => {
             {/* Image */}
             <div
               className="relative h-56 overflow-hidden cursor-pointer"
-              onClick={() => setSelectedProduct(product)}
+              onClick={() => {
+                setSelectedProduct(product);
+                setQuantity(1);
+              }}
             >
               <img
                 src={product.imageUrl}
@@ -241,7 +284,11 @@ export const Shop: React.FC = () => {
                 </span>
 
                 <button
-                  onClick={() => setSelectedProduct(product)}
+                  onClick={() => {
+                    // setSelectedProduct(product);
+                    // setQuantity(1);
+                    navigate(`/shop/view/${product.productId}`);
+                  }}
                   className="bg-stone-900 hover:bg-amber-700 text-white px-5 py-2 rounded-xl text-xs font-bold uppercase transition"
                 >
                   View
@@ -293,9 +340,34 @@ export const Shop: React.FC = () => {
                 }}
               />
 
+              <div className="mt-8">
+
+                <p className="text-sm font-semibold mb-3">
+                  Quantity
+                </p>
+
+                <select
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  className="w-full border rounded-xl px-4 py-3"
+                >
+                  {Array.from(
+                    {
+                      length: Math.min(selectedProduct.stock, 10),
+                    },
+                    (_, i) => (
+                      <option key={i + 1} value={i + 1}>
+                        {i + 1}
+                      </option>
+                    )
+                  )}
+                </select>
+
+              </div>
+
               <div className="mt-6">
                 <Link
-                  to={`/shop/view/${selectedProduct.productId}`}
+                  to={`/shop/view/${(selectedProduct.productId)}`}
                   className="text-amber-700 font-semibold hover:underline"
                 >
                   See More →
@@ -304,6 +376,13 @@ export const Shop: React.FC = () => {
 
               <div className="mt-8 flex gap-4">
                 <button
+                  onClick={() => {
+                    addToCart(
+                      selectedProduct.productId,
+                      quantity
+                    );
+                    navigate(`/cart`);
+                  }}
                   className="flex-1 py-4 rounded-2xl bg-amber-700 text-white font-semibold hover:bg-amber-800 transition"
                 >
                   <i className="fa-solid fa-cart-shopping mr-2"></i>
@@ -311,6 +390,7 @@ export const Shop: React.FC = () => {
                 </button>
 
                 <button
+                  // onClick={() => buyNow(selectedProduct.productId, quantity)}
                   className="flex-1 py-4 rounded-2xl bg-stone-900 text-white font-semibold hover:bg-stone-800 transition"
                 >
                   Buy Now

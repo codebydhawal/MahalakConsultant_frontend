@@ -21,7 +21,7 @@ import {
     PROJECT_CATEGORIES,
     ProjectCategory,
 } from "../../../services/project";
-import ProjectEditor from "../../../components/ProjectEditor";
+import ProjectEditor from "./ProjectEditor";
 import ProjectService from "../../../services/ProjectService";
 import { ProjectRequest } from "../../../services/project";
 import { generateProjectDocument } from "../../../services/DocxGenerator";

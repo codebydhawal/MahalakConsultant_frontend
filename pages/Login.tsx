@@ -1,18 +1,22 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { loginSuccess } from "../slices/authSlice";
+import { useAppDispatch } from "../store/hooks";
+import CartService from "@/services/CartService";
+import { setCart } from "@/slices/cartSlice";
 
-interface LoggedInUser {
-  email: string;
-  role: string;
-  token: string;
-  user: any;
-}
+// interface LoggedInUser {
+//   email: string;
+//   role: string;
+//   token: string;
+//   user: any;
+// }
 
-interface LoginProps {
-  onLogin: (user: LoggedInUser) => void;
-}
+// interface LoginProps {
+//   onLogin: (user: LoggedInUser) => void;
+// }
 
 interface JwtPayload {
   sub: string;
@@ -23,9 +27,9 @@ interface JwtPayload {
   exp: number;
 }
 
-export const Login: React.FC<LoginProps> = ({ onLogin }) => {
+export const Login: React.FC = () => {
   const navigate = useNavigate();
-
+  const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -66,8 +70,8 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
       };
 
       // Save token
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
+      // localStorage.setItem("token", token);
+      // localStorage.setItem("user", JSON.stringify(user));
 
       // Decode JWT
       const decoded = jwtDecode<JwtPayload>(token);
@@ -77,12 +81,20 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
       const role = decoded.role;
 
       // Store login information
-      onLogin({
-        email: formData.email,
-        role: role,
-        token: token,
-        user: user,
-      });
+      dispatch(
+        loginSuccess({
+          user,
+          token,
+        })
+      );
+
+      try {
+        const cartResponse = await CartService.getCart();
+
+        dispatch(setCart(cartResponse.data.data));
+      } catch (error) {
+        console.error("Unable to load cart", error);
+      }
 
       // Redirect based on role
       switch (role) {

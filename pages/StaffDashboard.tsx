@@ -45,7 +45,6 @@ const menuItems = [
     { text: "Products", icon: <Inventory2Icon />, path: "/staff/products" },
     { text: "Blogs", icon: <ArticleIcon />, path: "/staff/blogs" },
     { text: "Projects", icon: <WorkIcon />, path: "/staff/projects" },
-    { text: "Team", icon: <GroupsIcon />, path: "/staff/team" },
     { text: "Media", icon: <PhotoLibraryIcon />, path: "/staff/media" },
     { text: "Testimonials", icon: <ReviewsIcon />, path: "/staff/testimonials" },
     {
@@ -89,10 +88,10 @@ const StaffDashboard = () => {
         setAnchorEl(null);
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        navigate("/login");
-    };
+    // const handleLogout = () => {
+    //     localStorage.removeItem("token");
+    //     navigate("/login");
+    // };
 
     const drawerContent = (
         <Box
@@ -164,7 +163,7 @@ const StaffDashboard = () => {
                 ))}
             </List>
 
-            <Box sx={{ mt: "auto", p: 2 }}>
+            {/* <Box sx={{ mt: "auto", p: 2 }}>
                 <ListItemButton
                     onClick={handleLogout}
                     sx={{
@@ -188,7 +187,7 @@ const StaffDashboard = () => {
                         }
                     />}
                 </ListItemButton>
-            </Box>
+            </Box> */}
         </Box>
     );
 

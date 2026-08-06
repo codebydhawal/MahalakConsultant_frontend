@@ -20,23 +20,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import { useNavigate } from "react-router-dom";
 import UserService from "../../../services/UserService";
+import { UserResponse, RegisterUserRequest, UserStatus } from "@/services/User";
 
-interface User {
-    id: number;
-    firstName: string;
-    lastName: string;
-    fullName: string;
-    email: string;
-    role: string;
-    status: string;
-    createdAt: string;
-    updatedAt: string;
-}
 
 const UserList = () => {
     const navigate = useNavigate();
 
-    const [users, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<UserResponse[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -46,7 +36,13 @@ const UserList = () => {
     const loadUsers = async () => {
         try {
             const response = await UserService.getAllUsers();
-            setUsers(response.data.data);
+            const users: UserResponse[] = response.data.data;
+
+            setUsers(
+                users.filter(
+                    (user) => user.role === "ADMIN" || user.role === "STAFF" || user.role === "CUSTOMER"
+                )
+            );
         } catch (error) {
             console.error("Error loading users:", error);
         } finally {

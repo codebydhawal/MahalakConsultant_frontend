@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import UserService from "../services/UserService";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { RegisterUserRequest } from "../services/User";
 
 const Register: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterUserRequest>({
     firstName: "",
     lastName: "",
     email: "",
+    phoneNumber: "",
     password: "",
+    role: "CUSTOMER",
   });
 
   const [loading, setLoading] = useState(false);
@@ -40,37 +43,21 @@ const Register: React.FC = () => {
 
     try {
 
-      const requestBody = {
-        email: formData.email,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        password: formData.password,
-        role: "CUSTOMER",
-      };
-
-      const response = await axios.post(
-        "http://localhost:8080/rest/auth/register",
-        requestBody,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await UserService.register(formData);
 
       setSuccess(
         response.data.message || "Registration Successful!"
       );
 
-      // Clear form
       setFormData({
         firstName: "",
         lastName: "",
         email: "",
+        phoneNumber: "",
         password: "",
+        role: "CUSTOMER",
       });
 
-      // Redirect after success
       setTimeout(() => {
         navigate("/login");
       }, 1500);
@@ -84,19 +71,14 @@ const Register: React.FC = () => {
           err.response.data.message || "Registration Failed."
         );
       } else if (err.request) {
-        setError(
-          "Unable to connect to the server."
-        );
+        setError("Unable to connect to the server.");
       } else {
-        setError(
-          "Something went wrong."
-        );
+        setError("Something went wrong.");
       }
 
     } finally {
       setLoading(false);
     }
-
   };
 
   return (
@@ -186,6 +168,22 @@ const Register: React.FC = () => {
               className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-600"
             />
 
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-2">
+              Phone Number
+            </label>
+
+            <input
+              type="tel"
+              name="phoneNumber"
+              required
+              placeholder="+91 9876543210"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-600"
+            />
           </div>
 
           <div>

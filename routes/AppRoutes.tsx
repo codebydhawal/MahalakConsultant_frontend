@@ -1,42 +1,48 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
-import { Home } from "../pages/Home";
 import { About } from "../pages/About";
-import { Portfolio } from "../pages/Portfolio";
-import { Shop } from "../pages/Shop";
 import { Blog } from "../pages/Blog";
 import { BlogDetail } from "../pages/BlogDetail";
-import { Login } from "../pages/Login";
-import Register from "../pages/Register";
-import { Contact } from "../pages/Contact";
 import { Cart } from "../pages/Cart";
+import { Contact } from "../pages/Contact";
+import { Home } from "../pages/Home";
+import { Login } from "../pages/Login";
+import { Portfolio } from "../pages/Portfolio";
 import ProductDetails from "../pages/ProductDetails";
+import Register from "../pages/Register";
+import { Shop } from "../pages/Shop";
 
 import AdminDashboard from "../pages/AdminDashboard";
 import StaffDashboard from "../pages/StaffDashboard";
 
+import EditUsers from "../pages/common/users/EditUsers";
 import UserList from "../pages/common/users/UserList";
 import ViewUser from "../pages/common/users/ViewUser";
-import EditUsers from "../pages/common/users/EditUsers";
 
-import TeamList from "../pages/common/teams/TeamList";
-import EditTeam from "../pages/common/teams/EditTeam";
 import AddTeam from "../pages/common/teams/AddTeam";
+import EditTeam from "../pages/common/teams/EditTeam";
+import TeamList from "../pages/common/teams/TeamList";
 
-import ProductList from "../pages/common/products/ProductList";
 import AddProduct from "../pages/common/products/AddProduct";
 import EditProduct from "../pages/common/products/EditProduct";
+import ProductList from "../pages/common/products/ProductList";
 import ViewProduct from "../pages/common/products/ViewProduct";
 
-import BlogList from "../pages/common/blogs/BlogList";
 import AddBlog from "../pages/common/blogs/AddBlog";
+import BlogList from "../pages/common/blogs/BlogList";
 import EditBlog from "../pages/common/blogs/EditBlog";
 import ViewBlog from "../pages/common/blogs/ViewBlog";
 
-import ProjectList from "../pages/common/projects/ProjectList";
 import AddProject from "../pages/common/projects/AddProject";
+import ProjectList from "../pages/common/projects/ProjectList";
 import ViewProject from "../pages/common/projects/ViewProject";
+
+import AddMedia from "../pages/common/medias/AddMedia";
+import EditMedia from "../pages/common/medias/EditMedia";
+import MediaList from "../pages/common/medias/MediaList";
+
+import MyProfile from "../pages/common/profile/MyProfile";
 
 import {
   BlogPost,
@@ -46,6 +52,7 @@ import {
   TeamMember,
   Testimonial,
 } from "../types";
+import { Checkout } from "@/pages/Checkout";
 
 interface AppRoutesProps {
   projects: Project[];
@@ -71,10 +78,6 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
         path="/"
         element={
           <Home
-            projects={projects}
-            blogs={blogs}
-            media={media}
-            testimonials={testimonials}
             config={config}
           />
         }
@@ -82,7 +85,7 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
 
       <Route
         path="/about"
-        element={<About config={config} team={team} />}
+        element={<About config={config} />}
       />
 
       <Route path="/portfolio" element={<Portfolio />} />
@@ -109,6 +112,10 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
 
       <Route path="/cart" element={<Cart />} />
 
+      <Route path="/cart/checkout" element={<Checkout />} />
+      
+      <Route path="/profile" element={<MyProfile />} />
+
       {/* Admin Routes */}
       <Route path="/admin" element={<AdminDashboard />}>
         <Route path="users" element={<UserList />} />
@@ -118,6 +125,10 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
         <Route path="team" element={<TeamList />} />
         <Route path="team/edit/:id" element={<EditTeam />} />
         <Route path="team/add" element={<AddTeam />} />
+
+        <Route path="media" element={<MediaList />} />
+        <Route path="media/add" element={<AddMedia />} />
+        <Route path="media/edit/:id" element={<EditMedia />} />
 
         <Route path="products" element={<ProductList />} />
         <Route path="products/add" element={<AddProduct />} />
@@ -149,6 +160,10 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
         <Route path="projects" element={<ProjectList />} />
         <Route path="projects/add" element={<AddProject />} />
         <Route path="projects/view/:id" element={<ViewProject />} />
+
+        <Route path="media" element={<MediaList />} />
+        <Route path="media/add" element={<AddMedia />} />
+        <Route path="media/edit/:id" element={<EditMedia />} />
       </Route>
     </Routes>
   );

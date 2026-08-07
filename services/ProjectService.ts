@@ -123,6 +123,13 @@ class ProjectService {
       }
     );
   }
+
+  getRandomProjects() {
+    return axios.get<ApiResponse<ProjectResponse[]>>(
+      `${API_URL}/random`,
+      this.getAuthHeaders()
+    );
+  }
 }
 
 export default new ProjectService();

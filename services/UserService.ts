@@ -1,4 +1,10 @@
 import axios from "axios";
+import {
+    RegisterUserRequest,
+    UpdateUserRequest,
+    UserResponse
+} from "./User";
+import { ApiResponse } from "./ApiResponse";
 
 const BASE_URL = "http://localhost:8080/rest/auth";
 
@@ -8,66 +14,112 @@ const getHeaders = () => {
     return {
         headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
         },
     };
 };
 
 class UserService {
 
-    // Get All Users
+    /**
+     * Register User
+     */
+    register(request: RegisterUserRequest) {
+
+        return axios.post<ApiResponse<UserResponse>>(
+            `${BASE_URL}/register`,
+            request,
+            {
+                headers: {
+                    ...getHeaders().headers,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+    }
+
+    /**
+     * Get All Users
+     */
     getAllUsers() {
-        return axios.get(
+
+        return axios.get<ApiResponse<UserResponse[]>>(
             `${BASE_URL}/get-all`,
             getHeaders()
         );
     }
 
-    // Get User By Id
+    /**
+     * Get User By Id
+     */
     getUserById(userId: number) {
-        return axios.get(
+
+        return axios.get<ApiResponse<UserResponse>>(
             `${BASE_URL}/get?userId=${userId}`,
             getHeaders()
         );
     }
 
-    // Update User
-    updateUser(userId: number, data: any) {
-        return axios.put(
+    /**
+     * Update User
+     */
+    updateUser(
+        userId: number,
+        request: UpdateUserRequest,
+        profileImage?: File
+    ) {
+
+        const formData = new FormData();
+
+        formData.append(
+            "request",
+            new Blob(
+                [JSON.stringify(request)],
+                { type: "application/json" }
+            )
+        );
+
+        if (profileImage) {
+            formData.append("profileImage", profileImage);
+        }
+
+        return axios.put<ApiResponse<UserResponse>>(
             `${BASE_URL}/update?userId=${userId}`,
-            data,
-            getHeaders()
+            formData,
+            {
+                headers: {
+                    ...getHeaders().headers,
+                    "Content-Type": "multipart/form-data",
+                },
+            }
         );
     }
 
-    // Delete User
+    /**
+     * Delete User
+     */
     deleteUser(userId: number) {
-        return axios.delete(
+
+        return axios.delete<ApiResponse<UserResponse>>(
             `${BASE_URL}/delete?userId=${userId}`,
             getHeaders()
         );
     }
 
-    // Update Role & Status
+    /**
+     * Update User Role & Status
+     */
     updateUserRoleAndStatus(
         userId: number,
         role: string,
         status: string
     ) {
-        return axios.patch(
+
+        return axios.patch<ApiResponse<UserResponse>>(
             `${BASE_URL}/update-role-status?userId=${userId}&role=${role}&status=${status}`,
             {},
             getHeaders()
         );
     }
-    
-    // updateUserRoleAndStatus(userId: number, role: string, status: string) {
-    //     return axios.put(
-    //         `${BASE_URL}/update-role-status?userId=${userId}&role=${role}&status=${status}`,
-    //         {},
-    //         getHeaders()
-    //     );
-    // }
 }
 
 export default new UserService();

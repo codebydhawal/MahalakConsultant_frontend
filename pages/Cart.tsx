@@ -11,6 +11,7 @@ import {
   setCartError,
   clearCartState,
 } from "../slices/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 
 interface CartProps {
@@ -19,7 +20,7 @@ interface CartProps {
 
 export const Cart: React.FC = () => {
   const dispatch = useAppDispatch();
-
+  const navigate = useNavigate();
   const cartSummary = useAppSelector(
     (state) => state.cart.cart
   );
@@ -46,8 +47,7 @@ export const Cart: React.FC = () => {
   }, []);
 
   const proceedToCheckout = () => {
-    console.log("Proceed to Checkout");
-    // navigate("/checkout");
+    navigate("/cart/checkout");
   };
 
   const updateQuantity = async (cartId: string, quantity: number) => {

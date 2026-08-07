@@ -301,24 +301,27 @@ const ProductDetails = () => {
                                 </Button>
                             </Stack>
                             <div className="mt-8 flex gap-4">
-                                <Button
-                                    variant="contained"
-                                    startIcon={<ShoppingCart />}
-                                    onClick={async () => {
-                                        await addToCart();
-                                        navigate("/cart");
-                                    }}
-                                >
-                                    Add To Cart
-                                </Button>
+                                <div className="mt-8 flex gap-4">
+                                    <Button
+                                        variant="outlined"
+                                        startIcon={<ShoppingCart />}
+                                        sx={actionButtonStyle}
+                                        onClick={async () => {
+                                            await addToCart();
+                                            navigate("/cart");
+                                        }}
+                                    >
+                                        Add To Cart
+                                    </Button>
 
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    startIcon={<Bolt />}
-                                >
-                                    Buy Now
-                                </Button>
+                                    <Button
+                                        variant="outlined"
+                                        startIcon={<Bolt />}
+                                        sx={actionButtonStyle}
+                                    >
+                                        Buy Now
+                                    </Button>
+                                </div>
                             </div>
 
                         </CardContent>
@@ -335,3 +338,21 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
+
+const actionButtonStyle = {
+    borderColor: "#c96a10",
+    color: "#c96a10",
+    backgroundColor: "#fff",
+    borderRadius: "14px",
+    px: 4,
+    py: 1.5,
+    textTransform: "none",
+    fontWeight: 600,
+    transition: "all 0.3s ease",
+
+    "&:hover": {
+        backgroundColor: "#c96a10",
+        color: "#fff",
+        borderColor: "#c96a10",
+    },
+};

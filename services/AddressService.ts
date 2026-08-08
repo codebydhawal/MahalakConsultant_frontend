@@ -1,6 +1,6 @@
 import axios from "axios";
-import { type AddressRequest, type AddressResponse } from "./Address";
-import { type ApiResponse } from "./ApiResponse";
+import { AddressRequest, type AddressResponse } from "./Address";
+import { ApiResponse } from "./ApiResponse";
 
 const BASE_URL = "http://localhost:8080/rest/address";
 

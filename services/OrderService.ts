@@ -33,6 +33,15 @@ const OrderService = {
       }
     );
   },
+  getOrderForAdmin(orderId: string) {
+    return axios.get<ApiResponse<OrderResponse>>(
+      `${BASE_URL}/admin/get`,
+      {
+        ...auth(),
+        params: { orderId },
+      }
+    );
+  },
 };
 
 export default OrderService;

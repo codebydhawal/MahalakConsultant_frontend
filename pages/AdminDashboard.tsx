@@ -3,6 +3,7 @@ import ArticleIcon from "@mui/icons-material/Article";
 import CloudSyncIcon from "@mui/icons-material/CloudSync";
 import GroupsIcon from "@mui/icons-material/Groups";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PeopleIcon from "@mui/icons-material/People";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
@@ -25,6 +26,8 @@ const collapsedWidth = 80;
 const menuItems = [
     { text: "Users", icon: <PeopleIcon />, path: "/admin/users" },
     { text: "Products", icon: <Inventory2Icon />, path: "/admin/products" },
+    { text: "Commerce", icon: <ReceiptLongIcon />, path: "/admin/commerce" },
+    { text: "Pricing Rules", icon: <TuneIcon />, path: "/admin/pricing-rules" },
     { text: "Blogs", icon: <ArticleIcon />, path: "/admin/blogs" },
     { text: "Projects", icon: <WorkIcon />, path: "/admin/projects" },
     { text: "Team", icon: <GroupsIcon />, path: "/admin/team" },

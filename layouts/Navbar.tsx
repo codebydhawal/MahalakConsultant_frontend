@@ -15,7 +15,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useAppSelector, useAppDispatch } from "../store/hooks";
 import { logout } from "../slices/authSlice";
-import { clearCartState } from "../slices/cartSlice";
+import { clearCartState, setCart } from "../slices/cartSlice";
+import CartService from "../services/CartService";
 
 interface NavbarProps {
     config: SiteConfig;
@@ -69,6 +70,16 @@ const Navbar: React.FC<NavbarProps> = ({
     const cart = useAppSelector((state) => state.cart.cart);
 
     const cartCount = cart?.totalItems ?? 0;
+
+    useEffect(() => {
+        if (!localStorage.getItem("token") || cart) return;
+
+        CartService.getCart()
+            .then((response) => dispatch(setCart(response.data.data)))
+            .catch(() => {
+                // The user may be logged out or the cart may not exist yet.
+            });
+    }, [cart, dispatch]);
 
     return (
         <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-md border-b border-stone-200 py-0' : 'bg-transparent py-4'}`}>
@@ -160,6 +171,11 @@ const Navbar: React.FC<NavbarProps> = ({
                                     >
                                         <PersonIcon sx={{ mr: 1 }} />
                                         View Profile
+                                    </MenuItem>
+
+                                    <MenuItem onClick={() => { handleMenuClose(); navigate("/orders"); }}>
+                                        <i className="fa-solid fa-box mr-3"></i>
+                                        My Orders
                                     </MenuItem>
 
                                     <MenuItem

@@ -53,6 +53,12 @@ import {
   Testimonial,
 } from "../types";
 import { Checkout } from "@/pages/Checkout";
+import { OrderSuccess } from "@/pages/OrderSuccess";
+import { OnlinePayment } from "@/pages/OnlinePayment";
+import { MyOrders } from "@/pages/MyOrders";
+import { CommerceAdmin } from "@/pages/common/commerce/CommerceAdmin";
+import { PricingRules } from "@/pages/common/commerce/PricingRules";
+import { CloudSetupAdmin, ConfigAdmin, SecurityInfoAdmin, TestimonialsAdmin } from "@/pages/common/admin/StaticAdminPages";
 
 interface AppRoutesProps {
   projects: Project[];
@@ -113,6 +119,9 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
       <Route path="/cart" element={<Cart />} />
 
       <Route path="/cart/checkout" element={<Checkout />} />
+      <Route path="/order/success" element={<OrderSuccess />} />
+      <Route path="/payment/online" element={<OnlinePayment />} />
+      <Route path="/orders" element={<MyOrders />} />
       
       <Route path="/profile" element={<MyProfile />} />
 
@@ -143,6 +152,12 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
         <Route path="projects" element={<ProjectList />} />
         <Route path="projects/add" element={<AddProject />} />
         <Route path="projects/view/:id" element={<ViewProject />} />
+        <Route path="commerce" element={<CommerceAdmin />} />
+        <Route path="pricing-rules" element={<PricingRules />} />
+        <Route path="testimonials" element={<TestimonialsAdmin />} />
+        <Route path="config" element={<ConfigAdmin />} />
+        <Route path="SecurityInfo" element={<SecurityInfoAdmin />} />
+        <Route path="CloudSetup" element={<CloudSetupAdmin />} />
       </Route>
 
       {/* Staff Routes */}

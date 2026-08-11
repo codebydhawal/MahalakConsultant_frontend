@@ -6,7 +6,6 @@ import BackToTop from './components/BackToTop';
 import ScrollToTop from './components/ScrollToTop';
 import WhatsAppButton from './components/WhatsAppButton';
 import useAppData from "./hooks/useAppData";
-import useCart from "./hooks/useCart";
 import Footer from './layouts/Footer';
 import Navbar from './layouts/Navbar';
 import AppRoutes from "./routes/AppRoutes";
@@ -24,22 +23,13 @@ const App: React.FC = () => {
     siteConfig,
   } = useAppData();
 
-  const {
-    cart,
-    cartCount,
-    addToCart,
-    removeFromCart,
-    updateQuantity,
-    clearCart,
-  } = useCart();
-
   const isHeroPage = location.pathname === '/' || location.pathname === '/about';
 
   return (
     <>
       <ScrollToTop />
       <div className="min-h-screen flex flex-col bg-stone-50 overflow-x-hidden">
-        <Navbar cartCount={cartCount} config={siteConfig} />
+        <Navbar config={siteConfig} />
         <main className={`flex-grow ${isHeroPage ? 'pt-0' : 'pt-24 md:pt-28'}`}>
           <AppRoutes
             projects={projects}

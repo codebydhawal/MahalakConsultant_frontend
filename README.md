@@ -10,20 +10,15 @@ Aapki premium portfolio website ab cloud-ready hai. Ise final deploy karne ke li
 ## Step 2: Netlify Connectivity (Deployment)
 1. Netlify par jayein aur "Import from GitHub" karein.
 2. **Site Configuration > Environment variables** mein jayein.
-3. Niche di gayi Keys add karein:
-   - `SUPABASE_URL`: (Supabase dashboard se)
-   - `SUPABASE_ANON_KEY`: (Supabase dashboard se)
+3. Agar use ho rahi hon to ye Keys add karein:
    - `ADMIN_ID`: (Staff ID jo aap use karenge)
    - `ADMIN_PASS`: (Staff password jo aap use karenge)
    - `API_KEY`: (Google Gemini Key AI Advisor ke liye)
 
-## Step 3: Database Setup
-`Supabase_Setup.txt` file mein diye gaye SQL script ko Supabase SQL Editor mein chalaein. Iske bina data cloud par save nahi hoga.
-
 ## Technical Support Note:
 - **Frozen UI**: Layout ya design change karne ke liye developer ko explicitly notify karein.
 - **Security**: Card details server par kabhi save nahi hoti. WhatsApp Gateway is actively secured.
-- **Database**: App automatically offline-first kaam karegi agar internet slow hai.
+- **Data**: Is frontend mein Supabase connection nahi hai.
 
 **Admin Staff Portal:** `#/admin` 
 **Current Fallback Admin:** `admin` / `admin123` (Change this in Environment Variables immediately after deployment).

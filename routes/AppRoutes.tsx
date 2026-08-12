@@ -1,83 +1,64 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
+import { SiteConfig } from "../types";
 
-import { About } from "../pages/About";
-import { Blog } from "../pages/Blog";
-import { BlogDetail } from "../pages/BlogDetail";
-import { Cart } from "../pages/Cart";
-import { Contact } from "../pages/Contact";
-import { Home } from "../pages/Home";
-import { Login } from "../pages/Login";
-import { Portfolio } from "../pages/Portfolio";
-import ProductDetails from "../pages/ProductDetails";
-import Register from "../pages/Register";
-import { Shop } from "../pages/Shop";
+const load = (loader: () => Promise<any>, name?: string) => lazy(async () => {
+  const module = await loader();
+  return { default: name ? module[name] : module.default };
+});
 
-import AdminDashboard from "../pages/AdminDashboard";
-import StaffDashboard from "../pages/StaffDashboard";
+const About = load(() => import("../pages/About"), "About");
+const Blog = load(() => import("../pages/Blog"), "Blog");
+const BlogDetail = load(() => import("../pages/BlogDetail"), "BlogDetail");
+const Cart = load(() => import("../pages/Cart"), "Cart");
+const Contact = load(() => import("../pages/Contact"), "Contact");
+const Home = load(() => import("../pages/Home"), "Home");
+const Login = load(() => import("../pages/Login"), "Login");
+const Portfolio = load(() => import("../pages/Portfolio"), "Portfolio");
+const ProductDetails = load(() => import("../pages/ProductDetails"));
+const Register = load(() => import("../pages/Register"));
+const Shop = load(() => import("../pages/Shop"), "Shop");
+const AdminDashboard = load(() => import("../pages/AdminDashboard"));
+const StaffDashboard = load(() => import("../pages/StaffDashboard"));
+const EditUsers = load(() => import("../pages/common/users/EditUsers"));
+const UserList = load(() => import("../pages/common/users/UserList"));
+const ViewUser = load(() => import("../pages/common/users/ViewUser"));
+const AddTeam = load(() => import("../pages/common/teams/AddTeam"));
+const EditTeam = load(() => import("../pages/common/teams/EditTeam"));
+const TeamList = load(() => import("../pages/common/teams/TeamList"));
+const AddProduct = load(() => import("../pages/common/products/AddProduct"));
+const EditProduct = load(() => import("../pages/common/products/EditProduct"));
+const ProductList = load(() => import("../pages/common/products/ProductList"));
+const ViewProduct = load(() => import("../pages/common/products/ViewProduct"));
+const AddBlog = load(() => import("../pages/common/blogs/AddBlog"));
+const BlogList = load(() => import("../pages/common/blogs/BlogList"));
+const EditBlog = load(() => import("../pages/common/blogs/EditBlog"));
+const ViewBlog = load(() => import("../pages/common/blogs/ViewBlog"));
+const AddProject = load(() => import("../pages/common/projects/AddProject"));
+const ProjectList = load(() => import("../pages/common/projects/ProjectList"));
+const ViewProject = load(() => import("../pages/common/projects/ViewProject"));
+const AddMedia = load(() => import("../pages/common/medias/AddMedia"));
+const EditMedia = load(() => import("../pages/common/medias/EditMedia"));
+const MediaList = load(() => import("../pages/common/medias/MediaList"));
+const MyProfile = load(() => import("../pages/common/profile/MyProfile"));
+const Checkout = load(() => import("@/pages/Checkout"), "Checkout");
+const OrderSuccess = load(() => import("@/pages/OrderSuccess"), "OrderSuccess");
+const OnlinePayment = load(() => import("@/pages/OnlinePayment"), "OnlinePayment");
+const MyOrders = load(() => import("@/pages/MyOrders"), "MyOrders");
+const CommerceAdmin = load(() => import("@/pages/common/commerce/CommerceAdmin"), "CommerceAdmin");
+const PricingRules = load(() => import("@/pages/common/commerce/PricingRules"), "PricingRules");
+const TestimonialsAdmin = load(() => import("@/pages/common/admin/StaticAdminPages"), "TestimonialsAdmin");
+const ConfigAdmin = load(() => import("@/pages/common/admin/StaticAdminPages"), "ConfigAdmin");
+const SecurityInfoAdmin = load(() => import("@/pages/common/admin/StaticAdminPages"), "SecurityInfoAdmin");
+const CloudSetupAdmin = load(() => import("@/pages/common/admin/StaticAdminPages"), "CloudSetupAdmin");
 
-import EditUsers from "../pages/common/users/EditUsers";
-import UserList from "../pages/common/users/UserList";
-import ViewUser from "../pages/common/users/ViewUser";
-
-import AddTeam from "../pages/common/teams/AddTeam";
-import EditTeam from "../pages/common/teams/EditTeam";
-import TeamList from "../pages/common/teams/TeamList";
-
-import AddProduct from "../pages/common/products/AddProduct";
-import EditProduct from "../pages/common/products/EditProduct";
-import ProductList from "../pages/common/products/ProductList";
-import ViewProduct from "../pages/common/products/ViewProduct";
-
-import AddBlog from "../pages/common/blogs/AddBlog";
-import BlogList from "../pages/common/blogs/BlogList";
-import EditBlog from "../pages/common/blogs/EditBlog";
-import ViewBlog from "../pages/common/blogs/ViewBlog";
-
-import AddProject from "../pages/common/projects/AddProject";
-import ProjectList from "../pages/common/projects/ProjectList";
-import ViewProject from "../pages/common/projects/ViewProject";
-
-import AddMedia from "../pages/common/medias/AddMedia";
-import EditMedia from "../pages/common/medias/EditMedia";
-import MediaList from "../pages/common/medias/MediaList";
-
-import MyProfile from "../pages/common/profile/MyProfile";
-
-import {
-  BlogPost,
-  MediaItem,
-  Project,
-  SiteConfig,
-  TeamMember,
-  Testimonial,
-} from "../types";
-import { Checkout } from "@/pages/Checkout";
-import { OrderSuccess } from "@/pages/OrderSuccess";
-import { OnlinePayment } from "@/pages/OnlinePayment";
-import { MyOrders } from "@/pages/MyOrders";
-import { CommerceAdmin } from "@/pages/common/commerce/CommerceAdmin";
-import { PricingRules } from "@/pages/common/commerce/PricingRules";
-import { CloudSetupAdmin, ConfigAdmin, SecurityInfoAdmin, TestimonialsAdmin } from "@/pages/common/admin/StaticAdminPages";
-
-interface AppRoutesProps {
-  projects: Project[];
-  blogs: BlogPost[];
-  media: MediaItem[];
-  testimonials: Testimonial[];
-  team: TeamMember[];
-  config: SiteConfig;
-}
+interface AppRoutesProps { config: SiteConfig; }
 
 const AppRoutes: React.FC<AppRoutesProps> = ({
-  projects,
-  blogs,
-  media,
-  testimonials,
-  team,
   config,
 }) => {
   return (
+    <Suspense fallback={<div className="min-h-[50vh]" aria-busy="true" />}>
     <Routes>
       {/* Public Routes */}
       <Route
@@ -181,6 +162,7 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
         <Route path="media/edit/:id" element={<EditMedia />} />
       </Route>
     </Routes>
+    </Suspense>
   );
 };
 

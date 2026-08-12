@@ -21,10 +21,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import { jwtDecode } from "jwt-decode";
+import { City, Country, State } from "country-state-city";
 
 import AddressService from "../../../services/AddressService";
 import { AddressRequest, AddressResponse, AddressType } from "../../../services/Address";
-import LocationService from "../../../services/LocationService";
 import UserService from "../../../services/UserService";
 import { UpdateUserRequest, UserResponse } from "../../../services/User";
 
@@ -79,8 +79,6 @@ const MyProfile = () => {
     phoneNumber: "",
   });
   const [addressFormData, setAddressFormData] = useState<EditableAddress[]>([]);
-  const [addressLocations, setAddressLocations] = useState<Record<string, Record<string, string[]>>>({});
-  const [locationsLoading, setLocationsLoading] = useState(true);
   const [profileImage, setProfileImage] = useState<File | undefined>();
   const [profileImagePreview, setProfileImagePreview] = useState("");
   const [editMode, setEditMode] = useState(false);
@@ -135,25 +133,6 @@ const MyProfile = () => {
 
   useEffect(() => {
     loadProfile();
-    LocationService.getLocations()
-      .then((response) => {
-        const locations = response.data.countries.reduce<Record<string, Record<string, string[]>>>(
-          (countries, country) => {
-            countries[country.name] = country.states.reduce<Record<string, string[]>>(
-              (states, state) => {
-                states[state.name] = state.cities.map((city) => city.name);
-                return states;
-              },
-              {},
-            );
-            return countries;
-          },
-          {},
-        );
-        setAddressLocations(locations);
-      })
-      .catch((locationError) => console.error("Unable to load location options.", locationError))
-      .finally(() => setLocationsLoading(false));
   }, []);
 
   const handleUserChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -346,35 +325,40 @@ const MyProfile = () => {
                   </Grid>
                 ))}
                 {(() => {
-                  const states = Object.keys(addressLocations[address.country] ?? {});
-                  const cities = addressLocations[address.country]?.[address.state] ?? [];
+                  const countries = Country.getAllCountries();
+                  const selectedCountry = countries.find((country) => country.name === address.country);
+                  const states = selectedCountry ? State.getStatesOfCountry(selectedCountry.isoCode) : [];
+                  const selectedState = states.find((state) => state.name === address.state);
+                  const cities = selectedCountry && selectedState
+                    ? City.getCitiesOfState(selectedCountry.isoCode, selectedState.isoCode)
+                    : [];
 
                   return (
                     <>
                       <Grid size={{ xs: 12, md: 6 }}>
                         <Typography color="text.secondary">Country</Typography>
                         {editMode ? (
-                          <TextField select fullWidth required disabled={locationsLoading} value={address.country} onChange={(event) => handleCountryChange(index, event.target.value)} sx={{ mt: 1 }}>
+                          <TextField select fullWidth required value={address.country} onChange={(event) => handleCountryChange(index, event.target.value)} sx={{ mt: 1 }}>
                             <MenuItem value="" disabled>Select country</MenuItem>
-                            {includeSelectedOption(Object.keys(addressLocations), address.country).map((country) => <MenuItem key={country} value={country}>{country}</MenuItem>)}
+                            {includeSelectedOption(countries.map((country) => country.name), address.country).map((country) => <MenuItem key={country} value={country}>{country}</MenuItem>)}
                           </TextField>
                         ) : <Typography sx={{ fontWeight: "bold" }}>{address.country || "—"}</Typography>}
                       </Grid>
                       <Grid size={{ xs: 12, md: 6 }}>
                         <Typography color="text.secondary">State</Typography>
                         {editMode ? (
-                          <TextField select fullWidth required disabled={locationsLoading || !address.country} value={address.state} onChange={(event) => handleStateChange(index, event.target.value)} sx={{ mt: 1 }}>
+                          <TextField select fullWidth required disabled={!selectedCountry} value={address.state} onChange={(event) => handleStateChange(index, event.target.value)} sx={{ mt: 1 }}>
                             <MenuItem value="" disabled>Select state</MenuItem>
-                            {includeSelectedOption(states, address.state).map((state) => <MenuItem key={state} value={state}>{state}</MenuItem>)}
+                            {includeSelectedOption(states.map((state) => state.name), address.state).map((state) => <MenuItem key={state} value={state}>{state}</MenuItem>)}
                           </TextField>
                         ) : <Typography sx={{ fontWeight: "bold" }}>{address.state || "—"}</Typography>}
                       </Grid>
                       <Grid size={{ xs: 12, md: 6 }}>
                         <Typography color="text.secondary">City</Typography>
                         {editMode ? (
-                          <TextField select fullWidth required disabled={locationsLoading || !address.state} value={address.city} onChange={(event) => handleAddressChange(index, "city", event.target.value)} sx={{ mt: 1 }}>
+                          <TextField select fullWidth required disabled={!selectedState} value={address.city} onChange={(event) => handleAddressChange(index, "city", event.target.value)} sx={{ mt: 1 }}>
                             <MenuItem value="" disabled>Select city</MenuItem>
-                            {includeSelectedOption(cities, address.city).map((city) => <MenuItem key={city} value={city}>{city}</MenuItem>)}
+                            {includeSelectedOption(cities.map((city) => city.name), address.city).map((city) => <MenuItem key={city} value={city}>{city}</MenuItem>)}
                           </TextField>
                         ) : <Typography sx={{ fontWeight: "bold" }}>{address.city || "—"}</Typography>}
                       </Grid>

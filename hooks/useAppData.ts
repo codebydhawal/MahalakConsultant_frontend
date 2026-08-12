@@ -1,22 +1,5 @@
-import { useEffect, useState } from "react";
-
-import {
-  BLOGS as initialBlogs,
-  PRODUCTS as initialProducts,
-  PROJECTS as initialProjects,
-} from "../constants";
-
-import { fetchAll, fetchConfig } from "../lib/database";
-
-import {
-  BlogPost,
-  MediaItem,
-  Product,
-  Project,
-  SiteConfig,
-  TeamMember,
-  Testimonial,
-} from "../types";
+import { useState } from "react";
+import { SiteConfig } from "../types";
 
 const defaultSiteConfig: SiteConfig = {
   aboutTitle: "Design Beyond Structures",
@@ -52,57 +35,10 @@ const defaultSiteConfig: SiteConfig = {
 };
 
 const useAppData = () => {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [blogs, setBlogs] = useState<BlogPost[]>(initialBlogs);
-  const [projects, setProjects] = useState<Project[]>(initialProjects);
-
-  const [media, setMedia] = useState<MediaItem[]>([]);
-  const [team, setTeam] = useState<TeamMember[]>([]);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-
   const [siteConfig, setSiteConfig] =
     useState<SiteConfig>(defaultSiteConfig);
 
-  useEffect(() => {
-    const initializeData = async () => {
-      const [
-        cloudProducts,
-        cloudBlogs,
-        cloudProjects,
-        cloudTeam,
-        cloudMedia,
-        cloudTestimonials,
-        cloudConfig,
-      ] = await Promise.all([
-        fetchAll("products"),
-        fetchAll("blogs"),
-        fetchAll("projects"),
-        fetchAll("team"),
-        fetchAll("media"),
-        fetchAll("testimonials"),
-        fetchConfig(),
-      ]);
-
-      if (cloudProducts?.length) setProducts(cloudProducts);
-      if (cloudBlogs?.length) setBlogs(cloudBlogs);
-      if (cloudProjects?.length) setProjects(cloudProjects);
-      if (cloudTeam?.length) setTeam(cloudTeam);
-      if (cloudMedia?.length) setMedia(cloudMedia);
-      if (cloudTestimonials?.length)
-        setTestimonials(cloudTestimonials);
-      if (cloudConfig) setSiteConfig(cloudConfig);
-    };
-
-    initializeData();
-  }, []);
-
   return {
-    products,
-    blogs,
-    projects,
-    media,
-    team,
-    testimonials,
     siteConfig,
   };
 };

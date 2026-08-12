@@ -40,8 +40,7 @@ const ProductService = {
 
     getAllProducts() {
         return axios.get<ApiResponse<ProductResponse[]>>(
-            `${BASE_URL}/get-all`,
-            getHeaders()
+            `${BASE_URL}/get-all`
         );
     },
 
@@ -49,8 +48,7 @@ const ProductService = {
         return axios.get<ApiResponse<ProductResponse>>(
             `${BASE_URL}/get`,
             {
-                params: { productId },
-                ...getHeaders(),
+                params: { productId }
             }
         );
     },

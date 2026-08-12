@@ -61,8 +61,7 @@ class MediaService {
             {
                 params: {
                     mediaId,
-                },
-                headers: this.getAuthHeaders(),
+                }
             }
         );
     }
@@ -72,14 +71,11 @@ class MediaService {
      */
     getAllMedia(): Promise<AxiosResponse<ApiResponse<MediaResponse[]>>> {
 
-    return axios.get(
-        `${API_URL}/get-all`,
-        {
-            headers: this.getAuthHeaders(),
-        }
-    );
+        return axios.get(
+            `${API_URL}/get-all`
+        );
 
-}
+    }
 
     /**
      * Update Media
@@ -151,8 +147,7 @@ class MediaService {
             {
                 params: {
                     keyword,
-                },
-                headers: this.getAuthHeaders(),
+                }
             }
         );
     }

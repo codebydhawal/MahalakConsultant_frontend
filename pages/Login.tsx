@@ -1,7 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { loginSuccess } from "../slices/authSlice";
 import { useAppDispatch } from "../store/hooks";
 import CartService from "@/services/CartService";
@@ -29,6 +29,7 @@ interface JwtPayload {
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     email: "",
@@ -96,22 +97,92 @@ export const Login: React.FC = () => {
         console.error("Unable to load cart", error);
       }
 
-      // Redirect based on role
+      // ================================
+      // CHECK PENDING BUY NOW
+      // ================================
+
+      const pendingBuyNow = localStorage.getItem("pendingBuyNow");
+
+      if (pendingBuyNow) {
+
+        try {
+
+          const buyNowData = JSON.parse(pendingBuyNow);
+
+          const request = {
+            productId: buyNowData.productId,
+            quantity: buyNowData.quantity,
+          };
+
+          console.log("Processing pending Buy Now:", request);
+
+          const buyNowResponse =
+            await CartService.addToCart(request);
+
+          // Update Redux cart
+          dispatch(
+            setCart(buyNowResponse.data.data)
+          );
+
+          // Remove pending Buy Now only after successful add
+          localStorage.removeItem("pendingBuyNow");
+
+          // Go directly to checkout
+          navigate("/cart/checkout", {
+            replace: true,
+          });
+
+          return;
+
+        } catch (error) {
+
+          console.error(
+            "Failed to process Buy Now:",
+            error
+          );
+
+          setError(
+            "Login successful, but unable to prepare your checkout."
+          );
+
+          return;
+        }
+      }
+
+
+      // ================================
+      // NORMAL LOGIN REDIRECT
+      // ================================
+
       switch (role) {
+
         case "ADMIN":
-          navigate("/admin/users");
+          navigate("/admin/users", {
+            replace: true,
+          });
           break;
 
         case "STAFF":
-          navigate("/staff/products");
+          navigate("/staff/products", {
+            replace: true,
+          });
           break;
 
         case "CUSTOMER":
-          navigate("/shop");
+
+          const redirectTo =
+            location.state?.redirectTo || "/shop";
+
+          navigate(redirectTo, {
+            replace: true,
+          });
+
           break;
 
         default:
-          navigate("/");
+          navigate("/", {
+            replace: true,
+          });
       }
 
     } catch (err: any) {

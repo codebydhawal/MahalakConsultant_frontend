@@ -17,8 +17,7 @@ class ProjectService {
 
   getAllProjects() {
     return axios.get<ApiResponse<ProjectResponse[]>>(
-      `${API_URL}/get-all`,
-      this.getAuthHeaders()
+      `${API_URL}/get-all`
     );
   }
 
@@ -31,8 +30,7 @@ class ProjectService {
 
   searchProjects(keyword: string) {
     return axios.get<ApiResponse<ProjectResponse[]>>(
-      `${API_URL}/search?keyword=${keyword}`,
-      this.getAuthHeaders()
+      `${API_URL}/search?keyword=${keyword}`
     );
   }
 
@@ -126,8 +124,7 @@ class ProjectService {
 
   getRandomProjects() {
     return axios.get<ApiResponse<ProjectResponse[]>>(
-      `${API_URL}/random`,
-      this.getAuthHeaders()
+      `${API_URL}/random`
     );
   }
 }

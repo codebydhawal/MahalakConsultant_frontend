@@ -87,7 +87,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 <div className={`flex justify-between items-center transition-all duration-500 ${scrolled ? 'h-20' : 'h-24'}`}>
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center gap-3 group">
-                            <img src="logo.png" alt="Mahalak Logo" className="w-12 h-12 object-contain transition-all group-hover:rotate-12" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                            <img src="/logo.png" alt="Mahalak Logo" className="w-12 h-12 object-contain transition-all group-hover:rotate-12" onError={(e) => (e.currentTarget.style.display = 'none')} />
                             <div className="flex flex-col items-start">
                                 <span className={`text-2xl font-black tracking-tighter leading-none transition-colors duration-500 ${isTransparent ? 'text-white' : 'text-stone-800'}`}>MAHALAKK</span>
                                 <span className="text-[9px] font-black uppercase tracking-[0.5em] leading-none mt-1" style={{ color: config.accentColor }}>CONSULTANT</span>

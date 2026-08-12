@@ -35,7 +35,6 @@ const ProductDetails = () => {
 
     const navigate = useNavigate();
     const { id } = useParams();
-    const basePath = getDashboardBasePath();
     const dispatch = useDispatch();
     const [quantity, setQuantity] = useState(1);
     const [product, setProduct] = useState<ProductResponse | null>(null);
@@ -79,8 +78,28 @@ const ProductDetails = () => {
 
     }, [id]);
 
-    const addToCart = async () => {
-        if (!product) return;
+    // const addToCart = async () => {
+    //     if (!product) return;
+
+    //     try {
+    //         dispatch(setCartLoading(true));
+
+    //         const request: CartRequest = {
+    //             productId: product.productId,
+    //             quantity,
+    //         };
+
+    //         const response = await CartService.addToCart(request);
+
+    //         dispatch(setCart(response.data.data));
+    //     } catch (error) {
+    //         console.error(error);
+    //         dispatch(setCartError("Unable to add product to cart."));
+    //     }
+    // };
+
+    const addToCart = async (): Promise<boolean> => {
+        if (!product) return false;
 
         try {
             dispatch(setCartLoading(true));
@@ -93,12 +112,76 @@ const ProductDetails = () => {
             const response = await CartService.addToCart(request);
 
             dispatch(setCart(response.data.data));
+
+            return true;
+
         } catch (error) {
             console.error(error);
             dispatch(setCartError("Unable to add product to cart."));
+
+            return false;
+
+        } finally {
+            dispatch(setCartLoading(false));
         }
     };
 
+    const handleAddToCart = async () => {
+
+        const token = localStorage.getItem("token");
+
+        // Guest user
+        if (!token) {
+            navigate("/login", {
+                state: {
+                    redirectTo: "/cart",
+                },
+            });
+
+            return;
+        }
+
+        // Logged-in user
+        const success = await addToCart();
+
+        if (success) {
+            navigate("/cart");
+        }
+    };
+
+    const handleBuyNow = async () => {
+
+        const token = localStorage.getItem("token");
+
+        // Guest user
+        if (!token) {
+
+            if (!product) return;
+
+            localStorage.setItem(
+                "pendingBuyNow",
+                JSON.stringify({
+                    productId: product.productId,
+                    quantity: quantity,
+                })
+            );
+
+            navigate("/login", {
+                state: {
+                    redirectTo: "/cart/checkout",
+                },
+            });
+
+            return;
+        }
+
+        // Logged-in user
+        const success = await addToCart();
+
+        if (success) {
+            navigate("/cart/checkout");
+        }
+    };
 
     if (loading) {
         return (
@@ -139,7 +222,7 @@ const ProductDetails = () => {
             <Button
                 startIcon={<ArrowBack />}
                 sx={{ mb: 2 }}
-                onClick={() => navigate(`${basePath}/products`)}
+                onClick={() => navigate(`/products`)}
             >
                 Back
             </Button>
@@ -306,10 +389,7 @@ const ProductDetails = () => {
                                         variant="outlined"
                                         startIcon={<ShoppingCart />}
                                         sx={actionButtonStyle}
-                                        onClick={async () => {
-                                            await addToCart();
-                                            navigate("/cart");
-                                        }}
+                                        onClick={handleAddToCart}
                                     >
                                         Add To Cart
                                     </Button>
@@ -318,6 +398,7 @@ const ProductDetails = () => {
                                         variant="outlined"
                                         startIcon={<Bolt />}
                                         sx={actionButtonStyle}
+                                        onClick={handleBuyNow}
                                     >
                                         Buy Now
                                     </Button>

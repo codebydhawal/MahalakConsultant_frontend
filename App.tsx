@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { HashRouter, useLocation } from 'react-router-dom';
-import { AIAdvisor } from './components/AIAdvisor';
 
 import BackToTop from './components/BackToTop';
 import ScrollToTop from './components/ScrollToTop';
@@ -10,18 +9,13 @@ import Footer from './layouts/Footer';
 import Navbar from './layouts/Navbar';
 import AppRoutes from "./routes/AppRoutes";
 
+// The AI SDK is large and is only needed after a visitor opens the advisor.
+const AIAdvisor = lazy(() => import('./components/AIAdvisor').then(({ AIAdvisor }) => ({ default: AIAdvisor })));
+
 const App: React.FC = () => {
   const location = useLocation();
 
-  const {
-    products,
-    blogs,
-    projects,
-    media,
-    team,
-    testimonials,
-    siteConfig,
-  } = useAppData();
+  const { siteConfig } = useAppData();
 
   const isHeroPage = location.pathname === '/' || location.pathname === '/about';
 
@@ -31,18 +25,13 @@ const App: React.FC = () => {
       <div className="min-h-screen flex flex-col bg-stone-50 overflow-x-hidden">
         <Navbar config={siteConfig} />
         <main className={`flex-grow ${isHeroPage ? 'pt-0' : 'pt-24 md:pt-28'}`}>
-          <AppRoutes
-            projects={projects}
-            blogs={blogs}
-            media={media}
-            testimonials={testimonials}
-            team={team}
-            config={siteConfig}
-          />
+          <AppRoutes config={siteConfig} />
         </main>
         <Footer config={siteConfig} />
         <WhatsAppButton number={siteConfig.whatsappEnquiry} />
-        <AIAdvisor accentColor={siteConfig.accentColor} />
+        <Suspense fallback={null}>
+          <AIAdvisor accentColor={siteConfig.accentColor} />
+        </Suspense>
         <BackToTop accentColor={siteConfig.accentColor} />
       </div>
     </>

@@ -51,7 +51,6 @@ class TeamService {
         return axios.get<ApiResponse<TeamResponse>>(
             `${API_URL}/get`,
             {
-                ...this.getAuthHeaders(),
                 params: {
                     teamId,
                 },
@@ -62,8 +61,7 @@ class TeamService {
     getAllTeams() {
 
         return axios.get<ApiResponse<TeamResponse[]>>(
-            `${API_URL}/get-all`,
-            this.getAuthHeaders()
+            `${API_URL}/get-all`
         );
     }
 
@@ -117,7 +115,6 @@ class TeamService {
         return axios.get<ApiResponse<TeamResponse[]>>(
             `${API_URL}/search`,
             {
-                ...this.getAuthHeaders(),
                 params: {
                     keyword,
                 },

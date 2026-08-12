@@ -14,34 +14,30 @@ class BlogService {
     }
 
     getAllBlogs() {
-        return axios.get(`${BASE_URL}/get-all`, this.getHeaders());
+        return axios.get(`${BASE_URL}/get-all`);
     }
 
     getBlogById(blogId: string) {
         return axios.get(
-            `${BASE_URL}/get?blogId=${blogId}`,
-            this.getHeaders()
+            `${BASE_URL}/get?blogId=${blogId}`
         );
     }
 
     searchBlogs(keyword: string) {
         return axios.get(
-            `${BASE_URL}/search?keyword=${keyword}`,
-            this.getHeaders()
+            `${BASE_URL}/search?keyword=${keyword}`
         );
     }
 
     getBlogsByCategory(category: string) {
         return axios.get(
-            `${BASE_URL}/category?category=${category}`,
-            this.getHeaders()
+            `${BASE_URL}/category?category=${category}`
         );
     }
 
     getBlogsByStatus(status: string) {
         return axios.get(
-            `${BASE_URL}/status?status=${status}`,
-            this.getHeaders()
+            `${BASE_URL}/status?status=${status}`
         );
     }
 

@@ -5,8 +5,9 @@ import {
     UserResponse
 } from "./User";
 import { ApiResponse } from "./ApiResponse";
+import { API_ENDPOINTS } from "../config/api";
 
-const BASE_URL = "http://localhost:8080/rest/auth";
+const BASE_URL = API_ENDPOINTS.AUTH;
 
 const getHeaders = () => {
     const token = localStorage.getItem("token");

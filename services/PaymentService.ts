@@ -1,8 +1,9 @@
 import axios from "axios";
 import { ApiResponse } from "./ApiResponse";
 import { PaymentResponse } from "./Commerce";
+import { API_ENDPOINTS } from "../config/api";
 
-const BASE_URL = "http://localhost:8080/rest/payment";
+const BASE_URL = API_ENDPOINTS.PAYMENT;
 const auth = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
 
 const PaymentService = {

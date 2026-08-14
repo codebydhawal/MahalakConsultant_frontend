@@ -6,6 +6,7 @@ import { loginSuccess } from "../slices/authSlice";
 import { useAppDispatch } from "../store/hooks";
 import CartService from "@/services/CartService";
 import { setCart } from "@/slices/cartSlice";
+import { API_ENDPOINTS } from "../config/api";
 
 // interface LoggedInUser {
 //   email: string;
@@ -47,7 +48,7 @@ export const Login: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/rest/auth/login",
+        `${API_ENDPOINTS.AUTH}/login`,
         {
           email: formData.email,
           password: formData.password,

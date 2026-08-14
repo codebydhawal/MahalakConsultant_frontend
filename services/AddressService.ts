@@ -1,8 +1,9 @@
 import axios from "axios";
 import { AddressRequest, type AddressResponse } from "./Address";
 import { ApiResponse } from "./ApiResponse";
+import { API_ENDPOINTS } from "../config/api";
 
-const BASE_URL = "http://localhost:8080/rest/address";
+const BASE_URL = API_ENDPOINTS.ADDRESS;
 
 const getHeaders = () => {
   const token = localStorage.getItem("token");

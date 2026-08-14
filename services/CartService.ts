@@ -2,8 +2,9 @@ import axios from "axios";
 import { ApiResponse } from "./ApiResponse";
 import { CartRequest } from "./CartRequest";
 import { CartSummaryResponse } from "./CartSummaryResponse";
+import { API_ENDPOINTS } from "../config/api";
 
-const API_URL = "http://localhost:8080/rest/cart";
+const API_URL = API_ENDPOINTS.CART;
 
 class CartService {
 

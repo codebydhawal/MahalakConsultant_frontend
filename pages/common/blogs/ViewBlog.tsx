@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
+import { API_ENDPOINTS } from "../../../config/api";
 
 import {
     Avatar,
@@ -189,7 +189,7 @@ const ViewBlog = () => {
                 </Typography>
 
                 <Document
-                    file={`http://localhost:8080/rest/blog/pdf/${blog.contentFileId}`}
+                    file={`${API_ENDPOINTS.BLOG}/pdf/${blog.contentFileId}`}
                     // file={`/BLOG_Dhawal Bahe new.pdf`}
                     onLoadSuccess={onDocumentLoadSuccess}
                     loading={<CircularProgress />}

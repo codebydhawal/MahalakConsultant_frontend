@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import BlogService from "../services/BlogService";
 import { BlogResponse } from "../services/BlogResponse";
 import { getDashboardBasePath } from "../services/RouteUtils";
+import { API_ENDPOINTS } from "../config/api";
 // TypeScript may not have type declarations for these CSS side-effect imports.
 // @ts-ignore: allow importing CSS for react-pdf
 import "react-pdf/dist/Page/TextLayer.css";
@@ -130,7 +131,7 @@ export const BlogDetail: React.FC = () => {
           <div className="rich-text-content flex flex-col items-center">
 
             <Document
-              file={`http://localhost:8080/rest/blog/pdf/${blog.contentFileId}`}
+              file={`${API_ENDPOINTS.BLOG}/pdf/${blog.contentFileId}`}
               onLoadSuccess={onDocumentLoadSuccess}
               loading={<div className="text-center py-10">Loading PDF...</div>}
             >

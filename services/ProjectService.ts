@@ -1,8 +1,9 @@
 import axios from "axios";
 import { ApiResponse } from "./ApiResponse";
 import { ProjectRequest, ProjectResponse } from "./project";
+import { API_ENDPOINTS } from "../config/api";
 
-const API_URL = "http://localhost:8080/rest/project";
+const API_URL = API_ENDPOINTS.PROJECT;
 
 class ProjectService {
   private getAuthHeaders() {

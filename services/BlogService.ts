@@ -1,7 +1,8 @@
 import axios from "axios";
 import { BlogRequest } from "./BlogRequest";
+import { API_ENDPOINTS } from "../config/api";
 
-const BASE_URL = "http://localhost:8080/rest/blog";
+const BASE_URL = API_ENDPOINTS.BLOG;
 
 class BlogService {
 

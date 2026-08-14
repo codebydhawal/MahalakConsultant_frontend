@@ -2,8 +2,9 @@ import axios from "axios";
 import { ApiResponse } from "../services/ApiResponse";
 import { ProductRequest } from "../services/ProductRequest";
 import { ProductResponse } from "../services/ProductResponse";
+import { API_ENDPOINTS } from "../config/api";
 
-const BASE_URL = "http://localhost:8080/rest/product";
+const BASE_URL = API_ENDPOINTS.PRODUCT;
 
 const getHeaders = () => ({
     headers: {

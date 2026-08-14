@@ -1,10 +1,11 @@
 import axios from "axios";
 import { ApiResponse } from "./ApiResponse";
+import { API_ENDPOINTS } from "../config/api";
 
 export type PricingRuleKind = "tax-rule" | "discount-rule" | "shipping-rule";
 export interface PricingRule { taxId?: string; discountId?: string; shippingId?: string; name: string; rate: number; active: boolean; startDate: string; endDate?: string; }
 const auth = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
-const base = (kind: PricingRuleKind) => `http://localhost:8080/rest/${kind}`;
+const base = (kind: PricingRuleKind) => API_ENDPOINTS.PRICING_RULES[kind];
 const idFor = (kind: PricingRuleKind, rule: PricingRule) => kind === "tax-rule" ? rule.taxId : kind === "discount-rule" ? rule.discountId : rule.shippingId;
 const paramFor = (kind: PricingRuleKind) => kind === "tax-rule" ? "taxId" : kind === "discount-rule" ? "discountId" : "shippingId";
 

@@ -1,8 +1,9 @@
 import axios from "axios";
 import { ApiResponse } from "./ApiResponse";
 import { OrderRequest, OrderResponse } from "./Commerce";
+import { API_ENDPOINTS } from "../config/api";
 
-const BASE_URL = "http://localhost:8080/rest/order";
+const BASE_URL = API_ENDPOINTS.ORDER;
 const auth = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
 
 const OrderService = {

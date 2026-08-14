@@ -1,8 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 import { MediaRequest, MediaResponse } from "./Media";
 import { ApiResponse } from "./ApiResponse";
+import { API_ENDPOINTS } from "../config/api";
 
-const API_URL = "http://localhost:8080/rest/media";
+const API_URL = API_ENDPOINTS.MEDIA;
 
 class MediaService {
 

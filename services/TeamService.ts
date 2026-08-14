@@ -1,8 +1,9 @@
 import axios from "axios";
 import { ApiResponse } from "./ApiResponse";
 import { TeamRequest, TeamResponse } from "./Team";
+import { API_ENDPOINTS } from "../config/api";
 
-const API_URL = "http://localhost:8080/rest/team";
+const API_URL = API_ENDPOINTS.TEAM;
 
 class TeamService {
 

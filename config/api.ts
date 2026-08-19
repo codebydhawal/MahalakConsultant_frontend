@@ -1,8 +1,8 @@
 // src/config/api.ts
 
-import AddressService from "@/services/AddressService";
-
-export const API_BASE_URL = "http://localhost:8080";
+// export const API_BASE_URL = "http://localhost:8080";
+export const API_BASE_URL =
+    "https://mahalak-consultant-backend.onrender.com";
 
 export const API_ENDPOINTS = {
     AUTH: `${API_BASE_URL}/rest/auth`,

@@ -31,7 +31,6 @@ class UserService {
             request,
             {
                 headers: {
-                    ...getHeaders().headers,
                     "Content-Type": "application/json",
                 },
             }
